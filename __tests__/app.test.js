@@ -4,7 +4,6 @@ const seed = require("../db/seeds/seed");
 const database = require("../db/connection");
 const testData = require("../db/data/test-data/index");
 const { response } = require("express");
-const { forEach } = require("../db/data/test-data/users");
 
 beforeEach(() => {
   return seed(testData);
@@ -72,6 +71,63 @@ describe("nc-news", () => {
               Date.parse(allArticles[i + 1].created_at)
             );
           }
+        });
+    });
+  });
+  describe("GET /api/article/:article_id", () => {
+    test("responds with status 200", () => {
+      return request(app).get("/api/articles/1").expect(200);
+    });
+    test("responds with an object", () => {
+      return request(app)
+        .get("/api/articles/1")
+        .expect(200)
+        .then((response) => {
+          const article = response.body.article;
+          expect(typeof article === "object").toBe(true);
+          expect(article !== null).toBe(true);
+        });
+    });
+    test("responds with an object with the correct proptypes", () => {
+      return request(app)
+        .get("/api/articles/1")
+        .expect(200)
+        .then((response) => {
+          const article = response.body.article;
+          expect(article).toHaveProperty("author");
+          expect(article).toHaveProperty("title");
+          expect(article).toHaveProperty("article_id");
+          expect(article).toHaveProperty("body");
+          expect(article).toHaveProperty("topic");
+          expect(article).toHaveProperty("created_at");
+          expect(article).toHaveProperty("votes");
+          expect(article).toHaveProperty("article_img_url");
+        });
+    });
+    test("responds with the correct object", () => {
+      return request(app)
+        .get("/api/articles/1")
+        .expect(200)
+        .then((response) => {
+          const article = response.body.article;
+          expect(article.author).toBe("butter_bridge");
+          expect(article.title).toBe("Living in the shadow of a great man");
+          expect(article.article_id).toBe(1);
+          expect(article.body).toBe("I find this existence challenging");
+          expect(article.topic).toBe("mitch");
+          //expect(Date.parse(article.created_at)).toBe(1594329060000);
+          expect(article.votes).toBe(100);
+          expect(article.article_img_url).toBe(
+            "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700"
+          );
+        });
+    });
+    test("responds with status 404 and a message: Article not found", () => {
+      return request(app)
+        .get("/api/articles/500")
+        .expect(404)
+        .then((response) => {
+          expect(response.body.msg).toBe("Article not found");
         });
     });
   });
