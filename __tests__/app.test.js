@@ -94,30 +94,21 @@ describe("nc-news", () => {
         .expect(200)
         .then((response) => {
           const article = response.body.article;
-          expect(article).toHaveProperty("author");
-          expect(article).toHaveProperty("title");
-          expect(article).toHaveProperty("article_id");
-          expect(article).toHaveProperty("body");
-          expect(article).toHaveProperty("topic");
+          expect(article).toHaveProperty("author", "butter_bridge");
+          expect(article).toHaveProperty(
+            "title",
+            "Living in the shadow of a great man"
+          );
+          expect(article).toHaveProperty("article_id", 1);
+          expect(article).toHaveProperty(
+            "body",
+            "I find this existence challenging"
+          );
+          expect(article).toHaveProperty("topic", "mitch");
           expect(article).toHaveProperty("created_at");
-          expect(article).toHaveProperty("votes");
-          expect(article).toHaveProperty("article_img_url");
-        });
-    });
-    test("responds with the correct object", () => {
-      return request(app)
-        .get("/api/articles/1")
-        .expect(200)
-        .then((response) => {
-          const article = response.body.article;
-          expect(article.author).toBe("butter_bridge");
-          expect(article.title).toBe("Living in the shadow of a great man");
-          expect(article.article_id).toBe(1);
-          expect(article.body).toBe("I find this existence challenging");
-          expect(article.topic).toBe("mitch");
-          //expect(Date.parse(article.created_at)).toBe(1594329060000);
-          expect(article.votes).toBe(100);
-          expect(article.article_img_url).toBe(
+          expect(article).toHaveProperty("votes", 100);
+          expect(article).toHaveProperty(
+            "article_img_url",
             "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700"
           );
         });
