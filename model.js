@@ -1,4 +1,3 @@
-const e = require("express");
 const { response } = require("express");
 const database = require("./db/connection");
 
@@ -77,8 +76,7 @@ const fetchArticleById = (article_id) => {
     });
 };
 
-//This function firstly checks the request parameter is a number, before querying the database
-//On database request return, checks if comments exists before returning either an array of comments or an error message
+//This function first calls checkArticleExists helper function. If the promise chain is not broken by the helper function, it will return comments for the article_id
 const fetchCommentsByArticleId = (article_id) => {
   return checkArticleExists(article_id).then(() => {
     return database
