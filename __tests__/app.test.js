@@ -118,16 +118,16 @@ describe("nc-news", () => {
         .get("/api/articles/500")
         .expect(404)
         .then((response) => {
-          expect(response.body.msg).toBe("Article not found");
+          expect(response.body.msg).toBe("Article 500 does not exist");
         });
     });
-    test("400 - invalid id_number type - responds with status 400 and message: Invalid request: article_id is not a number", () => {
+    test("400 - invalid id_number type - responds with status 400 and message: Invalid request: hello is not a number", () => {
       return request(app)
         .get("/api/articles/hello")
         .expect(400)
         .then((response) => {
           expect(response.body.msg).toBe(
-            "Invalid request: article_id is not a number"
+            "Invalid request: hello is not a number"
           );
         });
     });
@@ -159,6 +159,14 @@ describe("nc-news", () => {
           expect(allComments[0].article_id).toBe(1);
         });
     });
+    test("responds with an empty comment object when there are no comments for an article", () => {
+      return request(app)
+        .get("/api/articles/2/comments")
+        .expect(200)
+        .then((response) => {
+          expect(response.body.comments).toEqual([]);
+        });
+    });
     test("responds with an array of comment objects sorted by date with most recent comments first", () => {
       return request(app)
         .get("/api/articles/1/comments")
@@ -177,10 +185,10 @@ describe("nc-news", () => {
     });
     test("404 - valid but none-existent article id_number - responds with status 404 and a message: Article not found", () => {
       return request(app)
-        .get("/api/articles/500/comments")
+        .get("/api/articles/499/comments")
         .expect(404)
         .then((response) => {
-          expect(response.body.msg).toBe("Article not found");
+          expect(response.body.msg).toBe("Article 499 does not exist");
         });
     });
     test("400 - invalid article id_number type - responds with status 400 and message: Invalid request: article_id is not a number", () => {
@@ -189,8 +197,99 @@ describe("nc-news", () => {
         .expect(400)
         .then((response) => {
           expect(response.body.msg).toBe(
+            "Invalid request: hello is not a number"
+          );
+        });
+    });
+  });
+  describe("POST /api/articles/:article_id/comments", () => {
+    test("responds with status 201 and the posted comment", () => {
+      const newComment = {
+        username: "butter_bridge",
+        body: "Do we need to use an existing username?",
+      };
+      return request(app)
+        .post("/api/articles/1/comments")
+        .send(newComment)
+        .expect(201)
+        .then((response) => {
+          const comment = response.body.comment;
+          expect(comment).toHaveProperty("article_id", 1);
+          expect(comment).toHaveProperty("author", "butter_bridge");
+          expect(comment).toHaveProperty(
+            "body",
+            "Do we need to use an existing username?"
+          );
+          expect(comment).toHaveProperty("created_at");
+          expect(comment).toHaveProperty("comment_id", 19);
+          expect(comment).toHaveProperty("votes", 0);
+        });
+    });
+    test("responds with error 400 and message when comment is missing username ", () => {
+      const newComment = {
+        body: "Do we need to use an existing username?",
+      };
+      return request(app)
+        .post("/api/articles/1/comments")
+        .send(newComment)
+        .expect(400)
+        .then((response) => {
+          expect(response.body.msg).toBe(
+            "Invalid request: username is missing"
+          );
+        });
+    });
+    test("responds with error 400 and message when comment is missing body ", () => {
+      const newComment = {
+        username: "butter_bridge",
+      };
+      return request(app)
+        .post("/api/articles/1/comments")
+        .send(newComment)
+        .expect(400)
+        .then((response) => {
+          expect(response.body.msg).toBe("Invalid request: body is missing");
+        });
+    });
+    test("responds with error 400 and message when article type is invalid", () => {
+      const newComment = {
+        username: "butter_bridge",
+        body: "Do we need to use an existing username?",
+      };
+      return request(app)
+        .post("/api/articles/hello/comments")
+        .send(newComment)
+        .expect(400)
+        .then((response) => {
+          expect(response.body.msg).toBe(
             "Invalid request: article_id is not a number"
           );
+        });
+    });
+    test("responds with error 404 and message when article does not exist", () => {
+      const newComment = {
+        username: "butter_bridge",
+        body: "Do we need to use an existing username?",
+      };
+      return request(app)
+        .post("/api/articles/500/comments")
+        .send(newComment)
+        .expect(404)
+        .then((response) => {
+          expect(response.body.msg).toBe("Article 500 does not exist");
+        });
+    });
+    test("responds with error 404 and message when username does not exist in database", () => {
+      const newComment = {
+        username: "jim",
+        body: "Do we need to use an existing username?",
+      };
+      return request(app)
+        .post("/api/articles/1/comments")
+        .send(newComment)
+        .expect(404)
+        .then((response) => {
+          expect(response.body.msg).toBe("Username jim not found in database");
         });
     });
   });
