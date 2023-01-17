@@ -2,6 +2,7 @@ const {
   fetchAllTopics,
   fetchAllArticles,
   fetchArticleById,
+  fetchCommentsByArticleId,
 } = require("./model");
 
 const getAllTopics = (request, response, next) => {
@@ -24,24 +25,31 @@ const getAllArticles = (request, response, next) => {
     });
 };
 
-//This function firstly checks the request parameter is a number.
-//It then passes the parameter to the model, and on return, checks if an article exists before returning either the article or an error message
 const getArticleById = (request, response, next) => {
   const article_id = request.params.article_id;
-  if (isNaN(article_id)) {
-    response
-      .status(400)
-      .send({ msg: "Invalid request: article_id is not a number" });
-  } else {
-    fetchArticleById(article_id)
-      .then((article) => {
-        if (article) response.status(200).send({ article });
-        else response.status(404).send({ msg: "Article not found" });
-      })
-      .catch((error) => {
-        next(error);
-      });
-  }
+  fetchArticleById(article_id)
+    .then((article) => {
+      response.status(200).send({ article });
+    })
+    .catch((error) => {
+      next(error);
+    });
 };
 
-module.exports = { getAllTopics, getAllArticles, getArticleById };
+const getCommentsByArticleId = (request, response, next) => {
+  const article_id = request.params.article_id;
+  fetchCommentsByArticleId(article_id)
+    .then((comments) => {
+      response.status(200).send({ comments });
+    })
+    .catch((error) => {
+      next(error);
+    });
+};
+
+module.exports = {
+  getAllTopics,
+  getAllArticles,
+  getArticleById,
+  getCommentsByArticleId,
+};

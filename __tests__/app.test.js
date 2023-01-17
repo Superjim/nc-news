@@ -132,11 +132,11 @@ describe("nc-news", () => {
         });
     });
   });
-  describe.skip("GET /api/articles/:article_id/comments", () => {
+  describe("GET /api/articles/:article_id/comments", () => {
     test("responds with status 200", () => {
       return request(app).get("/api/articles/1/comments").expect(200);
     });
-    test("responds with an array of comments, with atleast one comment, with the all comments having correct property types, and first object has the correct properties", () => {
+    test("responds with an array of comments objects with atleast one comment, with the all comments having correct property types, and first object has the correct properties", () => {
       return request(app)
         .get("/api/articles/1/comments")
         .expect(200)
@@ -152,20 +152,19 @@ describe("nc-news", () => {
             expect(comment).toHaveProperty("body");
             expect(comment).toHaveProperty("article_id");
           });
-          expect(comment[0].comment_id).toBe(1);
-          expect(comment[0].votes).toBe(1);
-          expect(comment[0].created_at).toBe(1);
-          expect(comment[0].author).toBe(1);
-          expect(comment[0].body).toBe(1);
-          expect(comment[0].article_id).toBe(1);
+          expect(allComments[0].comment_id).toBe(5);
+          expect(allComments[0].votes).toBe(0);
+          expect(allComments[0].author).toBe("icellusedkars");
+          expect(allComments[0].body).toBe("I hate streaming noses");
+          expect(allComments[0].article_id).toBe(1);
         });
     });
-    test("responds with an array of comments sorted by date with most recent comments first", () => {
+    test("responds with an array of comment objects sorted by date with most recent comments first", () => {
       return request(app)
         .get("/api/articles/1/comments")
         .expect(200)
         .then((response) => {
-          const comments = response.body.articles;
+          const comments = response.body.comments;
           expect(Array.isArray(comments)).toBe(true);
           expect(comments.length > 0).toBe(true);
           //Date parse the created_at property and check its greater than the next one along the array. Run to array.length - 1 so it doesnt compare undefined.
