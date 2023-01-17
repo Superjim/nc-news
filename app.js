@@ -1,9 +1,11 @@
+const { response } = require("express");
 const express = require("express");
 const app = express();
 const {
   getAllTopics,
   getAllArticles,
   getArticleById,
+  getCommentsByArticleId,
 } = require("./controller");
 
 app.use(express.json());
@@ -11,8 +13,13 @@ app.use(express.json());
 app.get("/api/topics", getAllTopics);
 app.get("/api/articles", getAllArticles);
 app.get("/api/articles/:article_id", getArticleById);
+app.get("/api/articles/:article_id/comments", getCommentsByArticleId);
 
 // Error handling
+
+app.use((request, reponse, next) => {
+  response.status(404).send({ msg: "path not found" });
+});
 
 app.use((error, request, response, next) => {
   if (error.status && error.msg) {
