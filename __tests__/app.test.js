@@ -163,7 +163,9 @@ describe("nc-news", () => {
       return request(app)
         .get("/api/articles/2/comments")
         .expect(200)
-        .then((response) => console.log(response.body));
+        .then((response) => {
+          expect(response.body.comments).toEqual([]);
+        });
     });
     test("responds with an array of comment objects sorted by date with most recent comments first", () => {
       return request(app)
