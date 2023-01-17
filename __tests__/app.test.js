@@ -118,16 +118,16 @@ describe("nc-news", () => {
         .get("/api/articles/500")
         .expect(404)
         .then((response) => {
-          expect(response.body.msg).toBe("Article not found");
+          expect(response.body.msg).toBe("Article 500 does not exist");
         });
     });
-    test("400 - invalid id_number type - responds with status 400 and message: Invalid request: article_id is not a number", () => {
+    test("400 - invalid id_number type - responds with status 400 and message: Invalid request: hello is not a number", () => {
       return request(app)
         .get("/api/articles/hello")
         .expect(400)
         .then((response) => {
           expect(response.body.msg).toBe(
-            "Invalid request: article_id is not a number"
+            "Invalid request: hello is not a number"
           );
         });
     });
@@ -197,7 +197,7 @@ describe("nc-news", () => {
         .expect(400)
         .then((response) => {
           expect(response.body.msg).toBe(
-            "Invalid request: article_id is not a number"
+            "Invalid request: hello is not a number"
           );
         });
     });
