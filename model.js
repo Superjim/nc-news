@@ -71,19 +71,34 @@ const fetchCommentsByArticleId = (article_id) => {
     return database
       .query(
         `
-    SELECT comment_id, votes, created_at, author, body, article_id 
-    FROM comments 
-    WHERE article_id = $1 
-    ORDER BY created_at desc 
-    `,
+      SELECT * 
+      FROM articles 
+      WHERE article_id = $1  
+      `,
         [article_id]
       )
-      .then(({ rowCount, rows }) => {
-        if (rowCount === 0) {
-          return Promise.reject({ status: 404, msg: "Article not found" });
-        } else {
-          return rows;
+      .then((article) => {
+        if (article.rows.length === 0) {
+          return Promise.reject({
+            status: 404,
+            msg: `Article ${article_id} does not exist`,
+          });
         }
+      })
+      .then(() => {
+        return database
+          .query(
+            `
+      SELECT comment_id, votes, created_at, author, body, article_id 
+      FROM comments 
+      WHERE article_id = $1 
+      ORDER BY created_at desc 
+      `,
+            [article_id]
+          )
+          .then(({ rows }) => {
+            return rows;
+          });
       });
   }
 };

@@ -159,6 +159,12 @@ describe("nc-news", () => {
           expect(allComments[0].article_id).toBe(1);
         });
     });
+    test("responds with an empty comment object when there are no comments for an article", () => {
+      return request(app)
+        .get("/api/articles/2/comments")
+        .expect(200)
+        .then((response) => console.log(response.body));
+    });
     test("responds with an array of comment objects sorted by date with most recent comments first", () => {
       return request(app)
         .get("/api/articles/1/comments")
@@ -177,10 +183,10 @@ describe("nc-news", () => {
     });
     test("404 - valid but none-existent article id_number - responds with status 404 and a message: Article not found", () => {
       return request(app)
-        .get("/api/articles/500/comments")
+        .get("/api/articles/499/comments")
         .expect(404)
         .then((response) => {
-          expect(response.body.msg).toBe("Article not found");
+          expect(response.body.msg).toBe("Article 499 does not exist");
         });
     });
     test("400 - invalid article id_number type - responds with status 400 and message: Invalid request: article_id is not a number", () => {
