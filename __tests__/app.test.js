@@ -121,9 +121,72 @@ describe("nc-news", () => {
           expect(response.body.msg).toBe("Article not found");
         });
     });
-    test("400 - invalid id_number type - responds with status 400 and message: Invalid request: article_id is not found", () => {
+    test("400 - invalid id_number type - responds with status 400 and message: Invalid request: article_id is not a number", () => {
       return request(app)
         .get("/api/articles/hello")
+        .expect(400)
+        .then((response) => {
+          expect(response.body.msg).toBe(
+            "Invalid request: article_id is not a number"
+          );
+        });
+    });
+  });
+  describe.skip("GET /api/articles/:article_id/comments", () => {
+    test("responds with status 200", () => {
+      return request(app).get("/api/articles/1/comments").expect(200);
+    });
+    test("responds with an array of comments, with atleast one comment, with the all comments having correct property types, and first object has the correct properties", () => {
+      return request(app)
+        .get("/api/articles/1/comments")
+        .expect(200)
+        .then((response) => {
+          const allComments = response.body.comments;
+          expect(Array.isArray(allComments)).toBe(true);
+          expect(allComments.length > 0).toBe(true);
+          allComments.forEach((comment) => {
+            expect(comment).toHaveProperty("comment_id");
+            expect(comment).toHaveProperty("votes");
+            expect(comment).toHaveProperty("created_at");
+            expect(comment).toHaveProperty("author");
+            expect(comment).toHaveProperty("body");
+            expect(comment).toHaveProperty("article_id");
+          });
+          expect(comment[0].comment_id).toBe(1);
+          expect(comment[0].votes).toBe(1);
+          expect(comment[0].created_at).toBe(1);
+          expect(comment[0].author).toBe(1);
+          expect(comment[0].body).toBe(1);
+          expect(comment[0].article_id).toBe(1);
+        });
+    });
+    test("responds with an array of comments sorted by date with most recent comments first", () => {
+      return request(app)
+        .get("/api/articles/1/comments")
+        .expect(200)
+        .then((response) => {
+          const comments = response.body.articles;
+          expect(Array.isArray(comments)).toBe(true);
+          expect(comments.length > 0).toBe(true);
+          //Date parse the created_at property and check its greater than the next one along the array. Run to array.length - 1 so it doesnt compare undefined.
+          for (let i = 0; i < comments.length - 1; i++) {
+            expect(Date.parse(comments[i].created_at)).toBeGreaterThan(
+              Date.parse(comments[i + 1].created_at)
+            );
+          }
+        });
+    });
+    test("404 - valid but none-existent article id_number - responds with status 404 and a message: Article not found", () => {
+      return request(app)
+        .get("/api/articles/500/comments")
+        .expect(404)
+        .then((response) => {
+          expect(response.body.msg).toBe("Article not found");
+        });
+    });
+    test("400 - invalid article id_number type - responds with status 400 and message: Invalid request: article_id is not a number", () => {
+      return request(app)
+        .get("/api/articles/hello/comments")
         .expect(400)
         .then((response) => {
           expect(response.body.msg).toBe(
