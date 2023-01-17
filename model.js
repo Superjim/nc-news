@@ -5,8 +5,8 @@ const fetchAllTopics = () => {
   return database
     .query(
       `
-    SELECT * FROM topics
-    `
+        SELECT * FROM topics
+        `
     )
     .then((topics) => {
       return topics.rows;
@@ -34,10 +34,10 @@ const fetchArticleById = (article_id) => {
   return database
     .query(
       `
-    SELECT author, title, article_id, body, topic, created_at, votes, article_img_url 
-    FROM articles 
-    WHERE article_id = $1
-    `,
+      SELECT author, title, article_id, body, topic, created_at, votes, article_img_url 
+      FROM articles 
+      WHERE article_id = $1
+      `,
       [article_id]
     )
     .then((article) => {
