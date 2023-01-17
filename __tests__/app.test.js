@@ -88,7 +88,7 @@ describe("nc-news", () => {
           expect(article !== null).toBe(true);
         });
     });
-    test("responds with an object with the correct proptypes", () => {
+    test("responds with an object with the correct properties and property types", () => {
       return request(app)
         .get("/api/articles/1")
         .expect(200)
@@ -113,12 +113,22 @@ describe("nc-news", () => {
           );
         });
     });
-    test("responds with status 404 and a message: Article not found", () => {
+    test("404 - valid but none-existent id_number - responds with status 404 and a message: Article not found", () => {
       return request(app)
         .get("/api/articles/500")
         .expect(404)
         .then((response) => {
           expect(response.body.msg).toBe("Article not found");
+        });
+    });
+    test("400 - invalid id_number type - responds with status 400 and message: Invalid request: article_id is not found", () => {
+      return request(app)
+        .get("/api/articles/hello")
+        .expect(400)
+        .then((response) => {
+          expect(response.body.msg).toBe(
+            "Invalid request: article_id is not a number"
+          );
         });
     });
   });
