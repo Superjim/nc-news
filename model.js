@@ -5,7 +5,7 @@ const fetchAllTopics = () => {
   return database
     .query(
       `
-    SELECT * FROM topics;
+    SELECT * FROM topics
     `
     )
     .then((topics) => {
@@ -19,7 +19,7 @@ const fetchAllArticles = () => {
       `
         SELECT articles.author, articles.title, articles.article_id, articles.topic, articles.created_at, articles.votes, articles.article_img_url, COUNT(comments.article_id) as comment_count 
         FROM articles 
-        JOIN comments 
+        LEFT JOIN comments 
         ON articles.article_id = comments.article_id 
         GROUP BY articles.article_id, comments.article_id, articles.author 
         ORDER BY articles.created_at desc
@@ -30,4 +30,19 @@ const fetchAllArticles = () => {
     });
 };
 
-module.exports = { fetchAllTopics, fetchAllArticles };
+const fetchArticleById = (article_id) => {
+  return database
+    .query(
+      `
+    SELECT author, title, article_id, body, topic, created_at, votes, article_img_url 
+    FROM articles 
+    WHERE article_id = $1
+    `,
+      [article_id]
+    )
+    .then((article) => {
+      return article.rows[0];
+    });
+};
+
+module.exports = { fetchAllTopics, fetchAllArticles, fetchArticleById };
