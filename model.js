@@ -88,9 +88,89 @@ const fetchCommentsByArticleId = (article_id) => {
   }
 };
 
+const addNewComment = (username, body, article_id) => {
+  //check if article_id param is a number
+  if (isNaN(article_id)) {
+    return Promise.reject({
+      status: 400,
+      msg: "Invalid request: article_id is not a number",
+    });
+    //check username is included in body
+  } else if (!username) {
+    return Promise.reject({
+      status: 400,
+      msg: "Invalid request: username is missing",
+    });
+    //check body is included in body
+  } else if (!body) {
+    return Promise.reject({
+      status: 400,
+      msg: "Invalid request: body is missing",
+    });
+  } else {
+    //check article exists in database
+    return (
+      database
+        .query(
+          `
+      SELECT * 
+      FROM articles 
+      WHERE article_id = $1  
+      `,
+          [article_id]
+        )
+        .then((article) => {
+          if (article.rows.length === 0) {
+            return Promise.reject({
+              status: 404,
+              msg: `Article ${article_id} does not exist`,
+            });
+          }
+        })
+        //check user exists in database
+        .then(() => {
+          return database
+            .query(
+              `
+        SELECT * 
+        FROM users 
+        WHERE username = $1 
+        `,
+              [username]
+            )
+            .then((user) => {
+              if (user.rows.length === 0) {
+                return Promise.reject({
+                  status: 404,
+                  msg: `Username ${username} not found in database`,
+                });
+              }
+            });
+        })
+        .then(() => {
+          //post comment to database
+          return database
+            .query(
+              `
+        INSERT INTO comments 
+        (author, body, article_id)
+        VALUES ($1, $2, $3)
+        RETURNING *
+        `,
+              [username, body, article_id]
+            )
+            .then((comment) => {
+              return comment.rows[0];
+            });
+        })
+    );
+  }
+};
+
 module.exports = {
   fetchAllTopics,
   fetchAllArticles,
   fetchArticleById,
   fetchCommentsByArticleId,
+  addNewComment,
 };

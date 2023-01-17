@@ -3,6 +3,7 @@ const {
   fetchAllArticles,
   fetchArticleById,
   fetchCommentsByArticleId,
+  addNewComment,
 } = require("./model");
 
 const getAllTopics = (request, response, next) => {
@@ -47,9 +48,22 @@ const getCommentsByArticleId = (request, response, next) => {
     });
 };
 
+const postCommentByArticleId = (request, response, next) => {
+  const { username, body } = request.body;
+  const { article_id } = request.params;
+  addNewComment(username, body, article_id)
+    .then((comment) => {
+      response.status(201).send({ comment });
+    })
+    .catch((error) => {
+      next(error);
+    });
+};
+
 module.exports = {
   getAllTopics,
   getAllArticles,
   getArticleById,
   getCommentsByArticleId,
+  postCommentByArticleId,
 };
