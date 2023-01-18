@@ -1,9 +1,11 @@
+const { request } = require("express");
 const {
   fetchAllTopics,
   fetchAllArticles,
   fetchArticleById,
   fetchCommentsByArticleId,
   addNewComment,
+  updateVotesByArticleId,
 } = require("./model");
 
 const getAllTopics = (request, response, next) => {
@@ -11,9 +13,7 @@ const getAllTopics = (request, response, next) => {
     .then((topics) => {
       response.status(200).send({ topics });
     })
-    .catch((error) => {
-      next(error);
-    });
+    .catch((error) => next(error));
 };
 
 const getAllArticles = (request, response, next) => {
@@ -21,9 +21,7 @@ const getAllArticles = (request, response, next) => {
     .then((articles) => {
       response.status(200).send({ articles });
     })
-    .catch((error) => {
-      next(error);
-    });
+    .catch((error) => next(error));
 };
 
 const getArticleById = (request, response, next) => {
@@ -32,9 +30,7 @@ const getArticleById = (request, response, next) => {
     .then((article) => {
       response.status(200).send({ article });
     })
-    .catch((error) => {
-      next(error);
-    });
+    .catch((error) => next(error));
 };
 
 const getCommentsByArticleId = (request, response, next) => {
@@ -43,9 +39,7 @@ const getCommentsByArticleId = (request, response, next) => {
     .then((comments) => {
       response.status(200).send({ comments });
     })
-    .catch((error) => {
-      next(error);
-    });
+    .catch((error) => next(error));
 };
 
 const postCommentByArticleId = (request, response, next) => {
@@ -55,9 +49,17 @@ const postCommentByArticleId = (request, response, next) => {
     .then((comment) => {
       response.status(201).send({ comment });
     })
-    .catch((error) => {
-      next(error);
-    });
+    .catch((error) => next(error));
+};
+
+const postVotesByArticleId = (request, response, next) => {
+  const inc_votes = request.body.inc_votes;
+  const { article_id } = request.params;
+  updateVotesByArticleId(inc_votes, article_id)
+    .then((article) => {
+      response.status(201).send({ article });
+    })
+    .catch((error) => next(error));
 };
 
 module.exports = {
@@ -66,4 +68,5 @@ module.exports = {
   getArticleById,
   getCommentsByArticleId,
   postCommentByArticleId,
+  postVotesByArticleId,
 };
