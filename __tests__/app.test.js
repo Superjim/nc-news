@@ -293,4 +293,102 @@ describe("nc-news", () => {
         });
     });
   });
+  describe("PATCH /api/articles/:article_id", () => {
+    test("responds with status 201 and the correct updated article for incrementing vote + 1", () => {
+      const vote1 = {
+        inc_votes: 1,
+      };
+      return request(app)
+        .post("/api/articles/1/")
+        .send(vote1)
+        .expect(201)
+        .then((response) => {
+          const article = response.body.article;
+          expect(article).toHaveProperty("author", "butter_bridge");
+          expect(article).toHaveProperty(
+            "title",
+            "Living in the shadow of a great man"
+          );
+          expect(article).toHaveProperty("article_id", 1);
+          expect(article).toHaveProperty(
+            "body",
+            "I find this existence challenging"
+          );
+          expect(article).toHaveProperty("topic", "mitch");
+          expect(article).toHaveProperty("created_at");
+          expect(article).toHaveProperty("votes", 101);
+          expect(article).toHaveProperty(
+            "article_img_url",
+            "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700"
+          );
+        });
+    });
+    test("responds with status 201 and the updated article for decrementing vote - 1", () => {
+      const vote1 = {
+        inc_votes: -1,
+      };
+      return request(app)
+        .post("/api/articles/1/")
+        .send(vote1)
+        .expect(201)
+        .then((response) => {
+          const article = response.body.article;
+          expect(article).toHaveProperty("votes", 99);
+        });
+    });
+    test("database is correctly updated, post request then get request", () => {
+      const vote5 = { inc_votes: 5 };
+      return request(app)
+        .post("/api/articles/1/")
+        .send(vote5)
+        .then(() => {
+          return request(app)
+            .get("/api/articles/1")
+            .then((response) => {
+              const article = response.body.article;
+              expect(article).toHaveProperty("votes", 105);
+            });
+        });
+    });
+    test("responds with error 404 and message when article does not exist", () => {
+      const vote1 = {
+        inc_votes: -1,
+      };
+      return request(app)
+        .post("/api/articles/4500/")
+        .send(vote1)
+        .expect(404)
+        .then((response) => {
+          expect(response.body.msg).toBe("Article 4500 does not exist");
+        });
+    });
+    test("responds with error 400 and message when params are missing", () => {
+      const vote1 = {
+        hello: "there",
+      };
+      return request(app)
+        .post("/api/articles/1/")
+        .send(vote1)
+        .expect(400)
+        .then((response) => {
+          expect(response.body.msg).toBe(
+            "Invalid request: missing inc_votes parameter"
+          );
+        });
+    });
+    test("responds with error 400 and message when inc_votes is not a number", () => {
+      const vote1 = {
+        inc_votes: "hello",
+      };
+      return request(app)
+        .post("/api/articles/1/")
+        .send(vote1)
+        .expect(400)
+        .then((response) => {
+          expect(response.body.msg).toBe(
+            "Invalid request: hello is not a number"
+          );
+        });
+    });
+  });
 });
