@@ -16,7 +16,7 @@ const getAllTopics = (request, response, next) => {
 };
 
 const getAllArticles = (request, response, next) => {
-  fetchAllArticles()
+  fetchAllArticles(request.query)
     .then((articles) => response.status(200).send({ articles }))
     .catch((error) => next(error));
 };

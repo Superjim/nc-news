@@ -56,7 +56,44 @@ const fetchAllUsers = () => {
 };
 
 //This function will respond with an array of all the article objects.
-const fetchAllArticles = () => {
+const fetchAllArticles = ({
+  sort_by = "created_at",
+  order = "desc",
+  topic = "",
+}) => {
+  const validSortBy = [
+    "article_id",
+    "title",
+    "topic",
+    "author",
+    "body",
+    "created_at",
+    "votes",
+  ];
+  const validOrder = ["asc", "desc"];
+  const validTopic = ["", "mitch", "cats", "paper"];
+
+  //is sort_by valid
+  if (!validSortBy.includes(sort_by))
+    return Promise.reject({
+      status: 400,
+      msg: `Invalid request: can not sort by ${sort_by}`,
+    });
+  //is order valid
+  if (!validOrder.includes(order))
+    return Promise.reject({
+      status: 400,
+      msg: `Invalid request: can not order by ${order}`,
+    });
+  //is topic valid
+  if (!validTopic.includes(topic))
+    return Promise.reject({
+      status: 404,
+      msg: `Topic ${topic} does not exist`,
+    });
+  //if topic exists, add where clause
+  if (topic !== "") topic = `WHERE topic = '${topic}'`;
+
   return database
     .query(
       `
@@ -64,8 +101,9 @@ const fetchAllArticles = () => {
         FROM articles 
         LEFT JOIN comments 
         ON articles.article_id = comments.article_id 
+        ${topic} 
         GROUP BY articles.article_id, comments.article_id, articles.author 
-        ORDER BY articles.created_at desc
+        ORDER BY articles.${sort_by} ${order}
         `
     )
     .then((articles) => {

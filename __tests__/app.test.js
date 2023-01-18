@@ -73,6 +73,101 @@ describe("nc-news", () => {
           }
         });
     });
+    test("responds with an array of articles related to the topic", () => {
+      const topics = ["mitch", "cats", "paper"];
+      for (let i = 0; i < topics.length; i++) {
+        return request(app)
+          .get(`/api/articles?topic=${topics[i]}`)
+          .expect(200)
+          .then((response) => {
+            const articles = response.body.articles;
+            expect(Array.isArray(articles)).toBe(true);
+            articles.forEach((article) => {
+              expect(article).toHaveProperty("topic", topics[i]);
+            });
+          });
+      }
+    });
+    test("responds with an array of articles sorted with date asc", () => {
+      return request(app)
+        .get("/api/articles?order=asc")
+        .expect(200)
+        .then((response) => {
+          const allArticles = response.body.articles;
+          expect(Array.isArray(allArticles)).toBe(true);
+          expect(allArticles.length > 0).toBe(true);
+          //Date parse the created_at property and check its greater than the next one along the array. Run to array.length - 1 so it doesnt compare undefined.
+          for (let i = 0; i < allArticles.length - 1; i++) {
+            expect(Date.parse(allArticles[i].created_at)).toBeLessThan(
+              Date.parse(allArticles[i + 1].created_at)
+            );
+          }
+        });
+    });
+    test("responds with error 404 and message when topic isnt in database", () => {
+      return request(app)
+        .get("/api/articles?topic=jim")
+        .expect(404)
+        .then((response) => {
+          expect(response.body.msg).toBe("Topic jim does not exist");
+        });
+    });
+    test("responds with error 400 when given invalid sort_by", () => {
+      return request(app)
+        .get("/api/articles?sort_by=jim")
+        .expect(400)
+        .then((response) => {
+          expect(response.body.msg).toBe(
+            "Invalid request: can not sort by jim"
+          );
+        });
+    });
+    test("responds with error 400 when given invalid order", () => {
+      return request(app)
+        .get("/api/articles?order=hello")
+        .expect(400)
+        .then((response) => {
+          expect(response.body.msg).toBe(
+            "Invalid request: can not order by hello"
+          );
+        });
+    });
+    test("responds with array sorted by author default desc", () => {
+      return request(app)
+        .get("/api/articles?sort_by=author")
+        .expect(200)
+        .then((response) => {
+          const allArticles = response.body.articles;
+          expect(allArticles[0].author).toBe("rogersop");
+          expect(allArticles[5].author).toBe("icellusedkars");
+          expect(allArticles[10].author).toBe("butter_bridge");
+        });
+    });
+    test("responds with array sorted by body asc", () => {
+      return request(app)
+        .get("/api/articles?sort_by=author&order=asc")
+        .expect(200)
+        .then((response) => {
+          const allArticles = response.body.articles;
+          expect(allArticles[0].author).toBe("butter_bridge");
+          expect(allArticles[5].author).toBe("icellusedkars");
+          expect(allArticles[10].author).toBe("rogersop");
+        });
+    });
+    test("responds with array of topics mitch sorted by author asc", () => {
+      return request(app)
+        .get("/api/articles?topic=mitch&sort_by=author&order=asc")
+        .expect(200)
+        .then((response) => {
+          const allArticles = response.body.articles;
+          allArticles.forEach((article) => {
+            expect(article.topic).toBe("mitch");
+          });
+          expect(allArticles[0].author).toBe("butter_bridge");
+          expect(allArticles[5].author).toBe("icellusedkars");
+          expect(allArticles[10].author).toBe("rogersop");
+        });
+    });
   });
   describe("GET /api/article/:article_id", () => {
     test("responds with status 200", () => {
