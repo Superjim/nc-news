@@ -100,7 +100,7 @@ const addNewComment = (username, body, article_id) => {
   if (isNaN(article_id)) {
     return Promise.reject({
       status: 400,
-      msg: "Invalid request: article_id is not a number",
+      msg: `Invalid request: ${article_id} is not a number`,
     });
     //check username is included in body
   } else if (!username) {
