@@ -457,7 +457,7 @@ describe("nc-news", () => {
           expect(response.body.msg).toBe("Article 4500 does not exist");
         });
     });
-    test("responds with error 400 and message when params are missing", () => {
+    test("responds with error 400 and message when object doesn't contain the right key of inc_votes", () => {
       const vote1 = {
         hello: "there",
       };
