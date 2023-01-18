@@ -391,4 +391,29 @@ describe("nc-news", () => {
         });
     });
   });
+  describe("GET /api/users", () => {
+    test("responds with status 200", () => {
+      return request(app).get("/api/users").expect(200);
+    });
+    test("responds with an array of user objects, with atleast one user", () => {
+      return request(app)
+        .get("/api/users")
+        .expect(200)
+        .then((response) => {
+          const allUsers = response.body.users;
+          expect(Array.isArray(allUsers)).toBe(true);
+          expect(allUsers.length === 4).toBe(true);
+          allUsers.forEach((user) => {
+            expect(user).toHaveProperty("username");
+            expect(user).toHaveProperty("name");
+            expect(user).toHaveProperty("avatar_url");
+          });
+          expect(allUsers[0].username).toBe("butter_bridge");
+          expect(allUsers[0].name).toBe("jonny");
+          expect(allUsers[0].avatar_url).toBe(
+            "https://www.healthytherapies.com/wp-content/uploads/2016/06/Lime3.jpg"
+          );
+        });
+    });
+  });
 });

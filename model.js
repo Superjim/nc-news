@@ -2,7 +2,7 @@ const { response } = require("express");
 const database = require("./db/connection");
 
 //This function checks if a article_id is a number, then checks if the article exists in the database.
-//It will reject a promise if these conditions are not met, and pass an error to the handler
+//It will reject a promise if these conditions are not met, and pass an error to the handler.
 const checkArticleExists = (article_id) => {
   if (isNaN(article_id)) {
     return Promise.reject({
@@ -29,6 +29,7 @@ const checkArticleExists = (article_id) => {
     });
 };
 
+//This function responds with an array of topic objects with slug and description properties.
 const fetchAllTopics = () => {
   return database
     .query(
@@ -41,6 +42,20 @@ const fetchAllTopics = () => {
     });
 };
 
+//This function responds with an array of user objects with username, name and avatar_url properties
+const fetchAllUsers = () => {
+  return database
+    .query(
+      `
+      SELECT * FROM users
+      `
+    )
+    .then((users) => {
+      return users.rows;
+    });
+};
+
+//This function will respond with an array of all the article objects.
 const fetchAllArticles = () => {
   return database
     .query(
@@ -60,6 +75,7 @@ const fetchAllArticles = () => {
 
 //This function first calls checkArticleExists helper function. If the promise chain is not broken by the helper function, it will return the article.
 const fetchArticleById = (article_id) => {
+  //check article_id is a number, check article exists,
   return checkArticleExists(article_id)
     .then(() => {
       return database.query(
@@ -78,6 +94,7 @@ const fetchArticleById = (article_id) => {
 
 //This function first calls checkArticleExists helper function. If the promise chain is not broken by the helper function, it will return comments for the article_id
 const fetchCommentsByArticleId = (article_id) => {
+  //check article_id is a number, check article exists,
   return checkArticleExists(article_id).then(() => {
     return database
       .query(
@@ -95,16 +112,10 @@ const fetchCommentsByArticleId = (article_id) => {
   });
 };
 
-//refactor to use helper function
+//This function first checks username and body are included in the body. It then calls checkArticleExists helper function. If the promise chain is not broken by the helper function, it will then check the username to check a user exists. After passing all these checks, it will post a comment to the database, RETURNING *
 const addNewComment = (username, body, article_id) => {
-  //check if article_id param is a number
-  if (isNaN(article_id)) {
-    return Promise.reject({
-      status: 400,
-      msg: `Invalid request: ${article_id} is not a number`,
-    });
-    //check username is included in body
-  } else if (!username) {
+  //check username is included in body
+  if (!username) {
     return Promise.reject({
       status: 400,
       msg: "Invalid request: username is missing",
@@ -116,25 +127,9 @@ const addNewComment = (username, body, article_id) => {
       msg: "Invalid request: body is missing",
     });
   } else {
-    //check article exists in database
+    //check article_id is a number, check article exists,
     return (
-      database
-        .query(
-          `
-      SELECT * 
-      FROM articles 
-      WHERE article_id = $1  
-      `,
-          [article_id]
-        )
-        .then((article) => {
-          if (article.rows.length === 0) {
-            return Promise.reject({
-              status: 404,
-              msg: `Article ${article_id} does not exist`,
-            });
-          }
-        })
+      checkArticleExists(article_id)
         //check user exists in database
         .then(() => {
           return database
@@ -176,6 +171,7 @@ const addNewComment = (username, body, article_id) => {
 };
 
 const updateVotesByArticleId = (inc_votes, article_id) => {
+  //check article_id is a number, check article exists,
   return checkArticleExists(article_id).then(() => {
     //check inc_votes exists
     if (!inc_votes) {
@@ -215,4 +211,5 @@ module.exports = {
   fetchCommentsByArticleId,
   addNewComment,
   updateVotesByArticleId,
+  fetchAllUsers,
 };

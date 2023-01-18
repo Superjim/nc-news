@@ -8,12 +8,14 @@ const {
   getCommentsByArticleId,
   postCommentByArticleId,
   postVotesByArticleId,
+  getAllUsers,
 } = require("./controller");
 
 app.use(express.json());
 
 app.get("/api/topics", getAllTopics);
 app.get("/api/articles", getAllArticles);
+app.get("/api/users", getAllUsers);
 app.get("/api/articles/:article_id", getArticleById);
 app.get("/api/articles/:article_id/comments", getCommentsByArticleId);
 app.post("/api/articles/:article_id/comments", postCommentByArticleId);
