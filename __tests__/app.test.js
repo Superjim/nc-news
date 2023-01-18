@@ -262,7 +262,7 @@ describe("nc-news", () => {
         .expect(400)
         .then((response) => {
           expect(response.body.msg).toBe(
-            "Invalid request: article_id is not a number"
+            "Invalid request: hello is not a number"
           );
         });
     });
