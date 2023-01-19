@@ -97,7 +97,8 @@ const fetchAllArticles = ({
   return database
     .query(
       `
-        SELECT articles.author, articles.title, articles.article_id, articles.topic, articles.created_at, articles.votes, articles.article_img_url, COUNT(comments.article_id) as comment_count 
+        SELECT articles.author, articles.title, articles.article_id, articles.topic, articles.created_at, articles.votes, articles.article_img_url, 
+        COUNT(comments.article_id)::integer AS comment_count 
         FROM articles 
         LEFT JOIN comments 
         ON articles.article_id = comments.article_id 
@@ -118,7 +119,12 @@ const fetchArticleById = (article_id) => {
     .then(() => {
       return database.query(
         `
-      SELECT author, title, article_id, body, topic, created_at, votes, article_img_url 
+      SELECT author, title, article_id, body, topic, created_at, votes, article_img_url, 
+      
+      (SELECT COUNT(*) 
+      FROM comments 
+      WHERE article_id = articles.article_id)::integer AS comment_count
+
       FROM articles 
       WHERE article_id = $1
       `,

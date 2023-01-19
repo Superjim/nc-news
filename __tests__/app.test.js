@@ -43,6 +43,7 @@ describe("nc-news", () => {
         .expect(200)
         .then((response) => {
           const allArticles = response.body.articles;
+          console.log(allArticles);
           expect(Array.isArray(allArticles)).toBe(true);
           expect(allArticles.length > 0).toBe(true);
           allArticles.forEach((article) => {
@@ -54,6 +55,7 @@ describe("nc-news", () => {
             expect(article).toHaveProperty("votes");
             expect(article).toHaveProperty("article_img_url");
             expect(article).toHaveProperty("comment_count");
+            expect(typeof article.comment_count).toBe("number");
           });
         });
     });
@@ -195,6 +197,7 @@ describe("nc-news", () => {
             "Living in the shadow of a great man"
           );
           expect(article).toHaveProperty("article_id", 1);
+          expect(article).toHaveProperty("comment_count", 11);
           expect(article).toHaveProperty(
             "body",
             "I find this existence challenging"
