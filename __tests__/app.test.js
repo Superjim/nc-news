@@ -519,12 +519,20 @@ describe("nc-news", () => {
     });
     test("comment is deleted", () => {
       return request(app)
-        .delete("/api/comments/1")
-        .expect(204)
-        .then(() => {
-          return database.query(`SELECT * FROM comments WHERE comment_id = 1`);
+        .get("/api/articles/9/comments")
+        .expect(200)
+        .then((response) => {
+          expect(response.body.comments.length).toBe(2);
         })
-        .then((response) => expect(response.rowCount).toBe(0));
+        .then(() => {
+          return request(app).delete("/api/comments/1").expect(204);
+        })
+        .then(() => {
+          return request(app).get("/api/articles/9/comments").expect(200);
+        })
+        .then((response) => {
+          expect(response.body.comments.length).toBe(1);
+        });
     });
     test("returns error 404 comment does not exist", () => {
       return request(app)
