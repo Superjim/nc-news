@@ -1,26 +1,29 @@
 const { response } = require("express");
 const express = require("express");
 const app = express();
+
 const {
   getAllTopics,
   getAllArticles,
   getArticleById,
   getCommentsByArticleId,
   postCommentByArticleId,
-  postVotesByArticleId,
+  patchVotesByArticleId,
   getAllUsers,
   removeCommentByCommentId,
+  getEndpoints,
 } = require("./controller");
 
 app.use(express.json());
 
+app.get("/api", getEndpoints);
 app.get("/api/topics", getAllTopics);
-app.get("/api/articles", getAllArticles);
 app.get("/api/users", getAllUsers);
+app.get("/api/articles", getAllArticles);
 app.get("/api/articles/:article_id", getArticleById);
 app.get("/api/articles/:article_id/comments", getCommentsByArticleId);
 app.post("/api/articles/:article_id/comments", postCommentByArticleId);
-app.post("/api/articles/:article_id", postVotesByArticleId);
+app.patch("/api/articles/:article_id", patchVotesByArticleId);
 app.delete("/api/comments/:comment_id", removeCommentByCommentId);
 
 // Error handling

@@ -1,5 +1,12 @@
-const { response } = require("express");
 const database = require("./db/connection");
+const fs = require("fs/promises");
+
+//This function returns endpoints.json as an object
+const fetchEndpoints = () => {
+  return fs
+    .readFile(__dirname + "/endpoints.json", "utf-8")
+    .then((file) => JSON.parse(file));
+};
 
 //This function checks if a article_id is a number, then checks if the article exists in the database.
 //It will reject a promise if these conditions are not met, and pass an error to the handler.
@@ -304,4 +311,5 @@ module.exports = {
   updateVotesByArticleId,
   fetchAllUsers,
   deleteCommentByCommentId,
+  fetchEndpoints,
 };
