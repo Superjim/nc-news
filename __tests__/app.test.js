@@ -43,7 +43,6 @@ describe("nc-news", () => {
         .expect(200)
         .then((response) => {
           const allArticles = response.body.articles;
-          console.log(allArticles);
           expect(Array.isArray(allArticles)).toBe(true);
           expect(allArticles.length > 0).toBe(true);
           allArticles.forEach((article) => {
@@ -510,6 +509,38 @@ describe("nc-news", () => {
           expect(allUsers[0].name).toBe("jonny");
           expect(allUsers[0].avatar_url).toBe(
             "https://www.healthytherapies.com/wp-content/uploads/2016/06/Lime3.jpg"
+          );
+        });
+    });
+  });
+  describe("DELETE /api/comments/1", () => {
+    test("returns status 204 and no content", () => {
+      return request(app).delete("/api/comments/1").expect(204);
+    });
+    test("comment is deleted", () => {
+      return request(app)
+        .delete("/api/comments/1")
+        .expect(204)
+        .then(() => {
+          return database.query(`SELECT * FROM comments WHERE comment_id = 1`);
+        })
+        .then((response) => expect(response.rowCount).toBe(0));
+    });
+    test("returns error 404 comment does not exist", () => {
+      return request(app)
+        .delete("/api/comments/250")
+        .expect(404)
+        .then((response) => {
+          expect(response.body.msg).toBe("Comment 250 does not exist");
+        });
+    });
+    test("400 - invalid comment id - responds with status 400 and message: Invalid request: hello is not a number", () => {
+      return request(app)
+        .delete("/api/comments/hello")
+        .expect(400)
+        .then((response) => {
+          expect(response.body.msg).toBe(
+            "Invalid request: hello is not a number"
           );
         });
     });

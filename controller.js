@@ -7,6 +7,7 @@ const {
   addNewComment,
   updateVotesByArticleId,
   fetchAllUsers,
+  deleteCommentByCommentId,
 } = require("./model");
 
 const getAllTopics = (request, response, next) => {
@@ -57,6 +58,13 @@ const postVotesByArticleId = (request, response, next) => {
     .catch((error) => next(error));
 };
 
+const removeCommentByCommentId = (request, response, next) => {
+  const { comment_id } = request.params;
+  deleteCommentByCommentId(comment_id)
+    .then(() => response.status(204).send())
+    .catch((error) => next(error));
+};
+
 module.exports = {
   getAllTopics,
   getAllArticles,
@@ -65,4 +73,5 @@ module.exports = {
   postCommentByArticleId,
   postVotesByArticleId,
   getAllUsers,
+  removeCommentByCommentId,
 };
