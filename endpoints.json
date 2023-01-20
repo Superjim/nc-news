@@ -150,6 +150,23 @@
       }
     }
   },
+  "PATCH /api/comments/:comment_id": {
+    "description": "Updates the vote value of an existing comment. The 'comment_id' must be passed as an integer. The updated comment is returned.",
+    "queries" : "comment_id",
+    "exampleBody": {
+      "inc_votes": 1
+    },
+    "exampleResponse": {
+      "comment": {
+        "comment_id": 1,
+        "body": "Oh, I've got compassion running out of my nose, pal! I'm the Sultan of Sentiment!",
+        "article_id": 9,
+        "author": "butter_bridge",
+        "votes": 17,
+        "created_at": "2020-04-06T12:17:00.000Z"
+      }
+    }
+  },
   "DELETE /api/comments/:comment_id": {
     "description": "Deletes a single comment by its 'comment_id'. The 'comment_id' parameter must be passed as an integer.",
     "queries" : "comment_id"

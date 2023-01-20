@@ -563,42 +563,121 @@ describe("nc-news", () => {
         });
     });
   });
-});
-
-describe("GET /api/users/:username", () => {
-  test("responds with status 200", () => {
-    return request(app).get("/api/users/butter_bridge").expect(200);
+  describe("GET /api/users/:username", () => {
+    test("responds with status 200", () => {
+      return request(app).get("/api/users/butter_bridge").expect(200);
+    });
+    test("responds with an object", () => {
+      return request(app)
+        .get("/api/users/butter_bridge")
+        .expect(200)
+        .then((response) => {
+          const article = response.body.user;
+          expect(typeof article === "object").toBe(true);
+          expect(article !== null).toBe(true);
+        });
+    });
+    test("responds with an object with the correct properties and property types", () => {
+      return request(app)
+        .get("/api/users/butter_bridge")
+        .expect(200)
+        .then((response) => {
+          const user = response.body.user;
+          expect(user).toHaveProperty("username", "butter_bridge");
+          expect(user).toHaveProperty("name", "jonny");
+          expect(user).toHaveProperty(
+            "avatar_url",
+            "https://www.healthytherapies.com/wp-content/uploads/2016/06/Lime3.jpg"
+          );
+        });
+    });
+    test("404 - valid but none-existent username - responds with status 404 and a message: Article not found", () => {
+      return request(app)
+        .get("/api/users/jim")
+        .expect(404)
+        .then((response) => {
+          expect(response.body.msg).toBe("User jim does not exist");
+        });
+    });
   });
-  test("responds with an object", () => {
-    return request(app)
-      .get("/api/users/butter_bridge")
-      .expect(200)
-      .then((response) => {
-        const article = response.body.user;
-        expect(typeof article === "object").toBe(true);
-        expect(article !== null).toBe(true);
-      });
-  });
-  test("responds with an object with the correct properties and property types", () => {
-    return request(app)
-      .get("/api/users/butter_bridge")
-      .expect(200)
-      .then((response) => {
-        const user = response.body.user;
-        expect(user).toHaveProperty("username", "butter_bridge");
-        expect(user).toHaveProperty("name", "jonny");
-        expect(user).toHaveProperty(
-          "avatar_url",
-          "https://www.healthytherapies.com/wp-content/uploads/2016/06/Lime3.jpg"
-        );
-      });
-  });
-  test("404 - valid but none-existent username - responds with status 404 and a message: Article not found", () => {
-    return request(app)
-      .get("/api/users/jim")
-      .expect(404)
-      .then((response) => {
-        expect(response.body.msg).toBe("User jim does not exist");
-      });
+  describe("PATCH /api/comments/:comment_id", () => {
+    test("returns status 200 and updated comment for +1 vote", () => {
+      const vote1 = {
+        inc_votes: 1,
+      };
+      return request(app)
+        .patch("/api/comments/1")
+        .send(vote1)
+        .expect(200)
+        .then((response) => {
+          expect(response.body.comment.votes).toBe(17);
+        });
+    });
+    test("returns status 200 and updated comment for -1 vote", () => {
+      const vote1 = {
+        inc_votes: -1,
+      };
+      return request(app)
+        .patch("/api/comments/1")
+        .send(vote1)
+        .expect(200)
+        .then((response) => {
+          expect(response.body.comment.votes).toBe(15);
+        });
+    });
+    test("returns error 404 comment does not exist", () => {
+      const vote1 = {
+        inc_votes: 1,
+      };
+      return request(app)
+        .patch("/api/comments/250")
+        .send(vote1)
+        .expect(404)
+        .then((response) => {
+          expect(response.body.msg).toBe("Comment 250 does not exist");
+        });
+    });
+    test("400 - invalid comment id - responds with status 400 and message: Invalid request: hello is not a number", () => {
+      const vote1 = {
+        inc_votes: 1,
+      };
+      return request(app)
+        .patch("/api/comments/hello")
+        .send(vote1)
+        .expect(400)
+        .then((response) => {
+          expect(response.body.msg).toBe(
+            "Invalid request: hello is not a number"
+          );
+        });
+    });
+    test("responds with error 400 and message when object doesn't contain the right key of inc_votes", () => {
+      const vote1 = {
+        hello: "there",
+      };
+      return request(app)
+        .patch("/api/comments/1")
+        .send(vote1)
+        .expect(400)
+        .then((response) => {
+          expect(response.body.msg).toBe(
+            "Invalid request: missing inc_votes parameter"
+          );
+        });
+    });
+    test("responds with error 400 and message when inc_votes is not a number", () => {
+      const vote1 = {
+        inc_votes: "hello",
+      };
+      return request(app)
+        .patch("/api/comments/1")
+        .send(vote1)
+        .expect(400)
+        .then((response) => {
+          expect(response.body.msg).toBe(
+            "Invalid request: hello is not a number"
+          );
+        });
+    });
   });
 });

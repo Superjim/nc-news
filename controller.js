@@ -12,6 +12,7 @@ const {
 const { updateVotesByArticleId } = require("./models/updateVotesByArticleId");
 const { addNewComment } = require("./models/addNewComment");
 const { fetchUserByUsername } = require("./models/fetchUserByUsername");
+const { updateVotesByCommentId } = require("./models/updateVotesByCommentId");
 
 const getEndpoints = (request, response, next) => {
   fetchEndpoints()
@@ -81,6 +82,14 @@ const getUserByUsername = (request, response, next) => {
     .catch((error) => next(error));
 };
 
+const patchVotesByCommentId = (request, response, next) => {
+  const { inc_votes } = request.body;
+  const { comment_id } = request.params;
+  updateVotesByCommentId(inc_votes, comment_id)
+    .then((comment) => response.status(200).send({ comment }))
+    .catch((error) => next(error));
+};
+
 module.exports = {
   getAllTopics,
   getAllArticles,
@@ -92,4 +101,5 @@ module.exports = {
   removeCommentByCommentId,
   getEndpoints,
   getUserByUsername,
+  patchVotesByCommentId,
 };
