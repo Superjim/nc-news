@@ -600,7 +600,7 @@ describe("nc-news", () => {
         });
     });
   });
-  describe.only("PATCH /api/comments/:comment_id", () => {
+  describe("PATCH /api/comments/:comment_id", () => {
     test("returns status 200 and updated comment for +1 vote", () => {
       const vote1 = {
         inc_votes: 1,
