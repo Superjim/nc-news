@@ -2,7 +2,7 @@
 
 ## About
 
-NC-News is a backend service built as part of a week-long project at a bootcamp. It mimics the functionality of a real-world service such as Reddit, providing information to the front-end architecture. With this API, you can access a variety of news topics, registered users, and articles, and perform various actions such as sorting, ordering, and filtering. With the instructions provided in this README, you will be able to set up and run the project locally, and begin experimenting with the available routes and features.
+NC-News is a backend service built as part of a week-long project for my Northcoders bootcamp. It mimics the functionality of a real-world service such as Reddit, providing information to the front-end architecture. With this API, you can access a variety of news topics, registered users, and articles, and perform various actions such as sorting, ordering, and filtering. With the instructions provided in this README, you will be able to set up and run the project locally, and begin experimenting with the available routes and features.
 
 ## Deployment
 
@@ -42,8 +42,6 @@ PGDATABASE=PGDATABASE=nc_news
 The minimum version of **Node.js** required to run this project is 6.0.0, as it is written in ES6, however I recommend using the latest long term support version. You can get this from https://nodejs.org.
 
 Once you have Node.js installed, type this in the terminal to install the following required dependencies for the project:
-
-- [ ]
 
 ```bash
 npm install
