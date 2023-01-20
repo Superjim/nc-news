@@ -2,12 +2,11 @@ const database = require("../db/connection");
 const { checkArticleExists } = require("./checkArticleExists");
 
 //This function first calls checkArticleExists helper function. If the promise chain is not broken by the helper function, it will return the article.
-const fetchArticleById = (article_id) => {
+const fetchArticleById = async (article_id) => {
   //check article_id is a number, check article exists,
-  return checkArticleExists(article_id)
-    .then(() => {
-      return database.query(
-        `
+  await checkArticleExists(article_id);
+  const { rows } = await database.query(
+    `
       SELECT author, title, article_id, body, topic, created_at, votes, article_img_url, 
       
       (SELECT COUNT(*) 
@@ -17,12 +16,9 @@ const fetchArticleById = (article_id) => {
       FROM articles 
       WHERE article_id = $1
       `,
-        [article_id]
-      );
-    })
-    .then(({ rows }) => {
-      return rows[0];
-    });
+    [article_id]
+  );
+  return rows[0];
 };
 
 module.exports = {
