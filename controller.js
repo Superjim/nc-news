@@ -1,14 +1,16 @@
+const { fetchArticleById } = require("./models/fetchArticleById");
 const {
-  fetchAllTopics,
-  fetchAllArticles,
-  fetchArticleById,
   fetchCommentsByArticleId,
-  addNewComment,
-  updateVotesByArticleId,
-  fetchAllUsers,
+} = require("./models/fetchCommentsByArticleId");
+const { fetchEndpoints } = require("./models/fetchEndpoints");
+const { fetchAllTopics } = require("./models/fetchAllTopics");
+const { fetchAllUsers } = require("./models/fetchAllUsers");
+const { fetchAllArticles } = require("./models/fetchAllArticles");
+const {
   deleteCommentByCommentId,
-  fetchEndpoints,
-} = require("./model");
+} = require("./models/deleteCommentByCommentId");
+const { updateVotesByArticleId } = require("./models/updateVotesByArticleId");
+const { addNewComment } = require("./models/addNewComment");
 
 const getEndpoints = (request, response, next) => {
   fetchEndpoints()
