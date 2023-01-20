@@ -391,14 +391,14 @@ describe("nc-news", () => {
     });
   });
   describe("PATCH /api/articles/:article_id", () => {
-    test("responds with status 201 and the correct updated article for incrementing vote + 1", () => {
+    test("responds with status 200 and the correct updated article for incrementing vote + 1", () => {
       const vote1 = {
         inc_votes: 1,
       };
       return request(app)
-        .post("/api/articles/1/")
+        .patch("/api/articles/1/")
         .send(vote1)
-        .expect(201)
+        .expect(200)
         .then((response) => {
           const article = response.body.article;
           expect(article).toHaveProperty("author", "butter_bridge");
@@ -420,14 +420,14 @@ describe("nc-news", () => {
           );
         });
     });
-    test("responds with status 201 and the updated article for decrementing vote - 1", () => {
+    test("responds with status 200 and the updated article for decrementing vote - 1", () => {
       const vote1 = {
         inc_votes: -1,
       };
       return request(app)
-        .post("/api/articles/1/")
+        .patch("/api/articles/1/")
         .send(vote1)
-        .expect(201)
+        .expect(200)
         .then((response) => {
           const article = response.body.article;
           expect(article).toHaveProperty("votes", 99);
@@ -436,7 +436,7 @@ describe("nc-news", () => {
     test("database is correctly updated, post request then get request", () => {
       const vote5 = { inc_votes: 5 };
       return request(app)
-        .post("/api/articles/1/")
+        .patch("/api/articles/1/")
         .send(vote5)
         .then(() => {
           return request(app)
@@ -452,7 +452,7 @@ describe("nc-news", () => {
         inc_votes: -1,
       };
       return request(app)
-        .post("/api/articles/4500/")
+        .patch("/api/articles/4500/")
         .send(vote1)
         .expect(404)
         .then((response) => {
@@ -464,7 +464,7 @@ describe("nc-news", () => {
         hello: "there",
       };
       return request(app)
-        .post("/api/articles/1/")
+        .patch("/api/articles/1/")
         .send(vote1)
         .expect(400)
         .then((response) => {
@@ -478,7 +478,7 @@ describe("nc-news", () => {
         inc_votes: "hello",
       };
       return request(app)
-        .post("/api/articles/1/")
+        .patch("/api/articles/1/")
         .send(vote1)
         .expect(400)
         .then((response) => {
@@ -550,6 +550,196 @@ describe("nc-news", () => {
           expect(response.body.msg).toBe(
             "Invalid request: hello is not a number"
           );
+        });
+    });
+  });
+  describe("GET /api", () => {
+    test("returns endpoints.json", () => {
+      return request(app)
+        .get("/api")
+        .expect(200)
+        .then((response) => {
+          expect(response.body).toEqual({
+            endpoints: {
+              "GET /api": {
+                description:
+                  "Returns a JSON representation of all available endpoints of the API.",
+              },
+              "GET /api/topics": {
+                description:
+                  "Retrieves an array of all the available topics in the database, each in the form of an object with keys 'slug' and 'description'.",
+                exampleResponse: {
+                  topics: [
+                    {
+                      slug: "mitch",
+                      description: "All information related to Mitch",
+                    },
+                    {
+                      slug: "cats",
+                      description: "All information related to dogs",
+                    },
+                    {
+                      slug: "paper",
+                      description: "All information related to paper",
+                    },
+                  ],
+                },
+              },
+              "GET /api/users": {
+                description:
+                  "Retrieves an array of all registered users in the database, each in the form of an object with keys 'username', 'name' and 'avatar_url'.",
+                exampleResponse: {
+                  users: [
+                    {
+                      username: "butter_bridge",
+                      name: "Jonny",
+                      avatar_url:
+                        "https://www.healthytherapies.com/wp-content/uploads/2016/06/Lime3.jpg",
+                    },
+                    {
+                      username: "icellusedkars",
+                      name: "Mitch",
+                      avatar_url:
+                        "https://img.freepik.com/free-vector/cute-cat-bread-cartoon-vector-icon-illustration-animal-food-icon-concept-isolated-premium-vector-flat-cartoon-style_138676-4224.jpg?auto=format&h=200",
+                    },
+                  ],
+                },
+              },
+              "GET /api/articles": {
+                description:
+                  "Retrieves an array of all articles in the API. Default queries include 'sort_by' (created_at), 'order' (desc) and 'topic' (all). Additional query parameters include 'sort_by' (article_id, title, topic, author, body, created_at, votes), 'order' (asc, desc), and 'topic' (slug of topic).",
+                queries: ["sort_by", "order", "topic"],
+                validSortBy: [
+                  "article_id",
+                  "title",
+                  "topic",
+                  "author",
+                  "body",
+                  "created_at",
+                  "votes",
+                ],
+                validOrder: ["asc", "desc"],
+                validTopic: "slug of topic in the database",
+                exampleResponse: {
+                  articles: [
+                    {
+                      author: "icellusedkars",
+                      title: "Eight pug gifs that remind me of mitch",
+                      article_id: 3,
+                      topic: "mitch",
+                      created_at: "2020-11-03T09:12:00.000Z",
+                      votes: 0,
+                      article_img_url:
+                        "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+                      comment_count: 2,
+                    },
+                    {
+                      author: "butter_bridge",
+                      title: "Living in the shadow of a great man",
+                      article_id: 1,
+                      body: "I find this existence challenging",
+                      topic: "mitch",
+                      created_at: "2020-07-09T20:11:00.000Z",
+                      votes: 100,
+                      article_img_url:
+                        "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+                      comment_count: 11,
+                    },
+                  ],
+                },
+              },
+              "GET /api/article/:article_id": {
+                description:
+                  "Retrieves a single article by its 'article_id'. The 'article_id' must be passed as an integer.",
+                queries: "article_id",
+                exampleResponse: {
+                  article: {
+                    author: "butter_bridge",
+                    title: "Living in the shadow of a great man",
+                    article_id: 1,
+                    body: "I find this existence challenging",
+                    topic: "mitch",
+                    created_at: "2020-07-09T20:11:00.000Z",
+                    votes: 100,
+                    article_img_url:
+                      "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+                    comment_count: 11,
+                  },
+                },
+              },
+              "GET /api/article/:article_id/comments": {
+                description:
+                  "Retrieves an array of all comments assigned to the specified 'article_id'. The 'article_id' parameter must be passed as an integer.",
+                queries: "article_id",
+                exampleResponse: {
+                  comments: [
+                    {
+                      comment_id: 5,
+                      votes: 0,
+                      created_at: "2020-11-03T21:00:00.000Z",
+                      author: "icellusedkars",
+                      body: "I hate streaming noses",
+                      article_id: 1,
+                    },
+                    {
+                      comment_id: 7,
+                      votes: 10,
+                      created_at: "2021-01-19T09:00:00.000Z",
+                      author: "butter_bridge",
+                      body: "I love this article!",
+                      article_id: 1,
+                    },
+                  ],
+                },
+              },
+              "POST /api/article/:article_id/comments": {
+                description:
+                  "Posts a new comment to the database. The 'article_id' must be passed as an integer, and the 'username' must match an existing user in the database. The new comment is returned.",
+                queries: "article_id",
+                validUsers: "username must exist in the database",
+                exampleBody: {
+                  username: "butter_bridge",
+                  body: "I loved this article!",
+                },
+                exampleResponse: {
+                  comment: {
+                    comment_id: 19,
+                    body: "I loved this article!",
+                    article_id: 1,
+                    author: "butter_bridge",
+                    votes: 0,
+                    created_at: "2023-01-19T14:57:40.334Z",
+                  },
+                },
+              },
+              "PATCH /api/article/:article_id": {
+                description:
+                  "Updates the vote value of an existing article. The 'article_id' must be passed as an integer. The updated article is returned.",
+                queries: "article_id",
+                exampleBody: {
+                  inc_votes: -1,
+                },
+                exampleResponse: {
+                  article: {
+                    article_id: 1,
+                    title: "Living in the shadow of a great man",
+                    topic: "mitch",
+                    author: "butter_bridge",
+                    body: "I find this existence challenging",
+                    created_at: "2020-07-09T20:11:00.000Z",
+                    votes: 99,
+                    article_img_url:
+                      "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+                  },
+                },
+              },
+              "DELETE /api/comments/:comment_id": {
+                description:
+                  "Deletes a single comment by its 'comment_id'. The 'comment_id' parameter must be passed as an integer.",
+                queries: "comment_id",
+              },
+            },
+          });
         });
     });
   });

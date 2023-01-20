@@ -1,4 +1,3 @@
-const { request } = require("express");
 const {
   fetchAllTopics,
   fetchAllArticles,
@@ -8,7 +7,14 @@ const {
   updateVotesByArticleId,
   fetchAllUsers,
   deleteCommentByCommentId,
+  fetchEndpoints,
 } = require("./model");
+
+const getEndpoints = (request, response, next) => {
+  fetchEndpoints()
+    .then((endpoints) => response.status(200).send({ endpoints }))
+    .catch((error) => next(error));
+};
 
 const getAllTopics = (request, response, next) => {
   fetchAllTopics()
@@ -50,11 +56,11 @@ const postCommentByArticleId = (request, response, next) => {
     .catch((error) => next(error));
 };
 
-const postVotesByArticleId = (request, response, next) => {
+const patchVotesByArticleId = (request, response, next) => {
   const { inc_votes } = request.body;
   const { article_id } = request.params;
   updateVotesByArticleId(inc_votes, article_id)
-    .then((article) => response.status(201).send({ article }))
+    .then((article) => response.status(200).send({ article }))
     .catch((error) => next(error));
 };
 
@@ -71,7 +77,8 @@ module.exports = {
   getArticleById,
   getCommentsByArticleId,
   postCommentByArticleId,
-  postVotesByArticleId,
+  patchVotesByArticleId,
   getAllUsers,
   removeCommentByCommentId,
+  getEndpoints,
 };
