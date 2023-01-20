@@ -28,7 +28,7 @@ Create two .env files, .env.test and .env.development in the nc-news directory.
 In the .env.test file, you should add the following line:
 
 ```
-PGDATABASE=PGDATABASE=nc_news_test
+PGDATABASE=nc_news_test
 ```
 
 In the .env.development file, add the following:
