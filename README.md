@@ -102,8 +102,7 @@ The application is also deployed online using Render at the address https://nc-n
 | POST /api/articles/:article_id/comments | Posts a new comment to the database. The 'article_id' must be passed as an integer, and the 'username' must match an existing user in the database. The new comment is returned.                                                                                                              |
 | PATCH /api/articles/:article_id         | Updates the vote value of an existing article. The 'article_id' must be passed as an integer. The updated article is returned.                                                                                                                                                                |
 | PATCH /api/comments/:comment_id         | Updates the vote value of an existing comment. The 'comment_id' must be passed as an integer. The updated comment is returned.                                                                                                                                                                |
-
-| DELETE /api/comments/:comment_id | Deletes a single comment by its 'comment_id'. The 'comment_id' parameter must be passed as an integer. |
+| DELETE /api/comments/:comment_id        | Deletes a single comment by its 'comment_id'. The 'comment_id' parameter must be passed as an integer.                                                                                                                                                                                        |
 
 ## 7. Example Usage
 
