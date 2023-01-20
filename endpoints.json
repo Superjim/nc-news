@@ -29,6 +29,16 @@
       ]
     }
   },
+  "GET /api/users/:username": {
+    "description": "Retrieves a single user by its 'username'. Returns an object with the properties 'username', 'name' and 'avatar_url'.",
+    "exampleResponse": {
+      "user": {
+        "username": "butter_bridge",
+        "name": "jonny",
+        "avatar_url": "https://www.healthytherapies.com/wp-content/uploads/2016/06/Lime3.jpg"
+      }
+    }
+  },
   "GET /api/articles": {
     "description": "Retrieves an array of all articles in the API. Default queries include 'sort_by' (created_at), 'order' (desc) and 'topic' (all). Additional query parameters include 'sort_by' (article_id, title, topic, author, body, created_at, votes), 'order' (asc, desc), and 'topic' (slug of topic).",
     "queries": [ "sort_by", "order", "topic"],
