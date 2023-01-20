@@ -37,7 +37,7 @@ PGDATABASE=nc_news_test
 In the .env.development file, add the following:
 
 ```
-PGDATABASE=PGDATABASE=nc_news
+PGDATABASE=nc_news
 ```
 
 ## 3. Install dependencies
