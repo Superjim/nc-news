@@ -18,6 +18,9 @@ If you would like to deploy the project yourself locally, you can do so by follo
 
 ```bash
 git clone https://github.com/Superjim/nc-news
+```
+
+```bash
 cd nc-news
 ```
 
@@ -65,6 +68,9 @@ The postgresql database will require seeding. Type the following in the terminal
 
 ```bash
 npm run setup-dbs
+```
+
+```bash
 npm run seed
 ```
 
