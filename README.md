@@ -66,6 +66,8 @@ npm install
 
 The postgresql database will require seeding. Type the following in the terminal:
 
+TODO: what is seeding, what tables are being created?
+
 ```bash
 npm run setup-dbs
 ```
