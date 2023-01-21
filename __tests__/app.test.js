@@ -141,7 +141,7 @@ describe("nc-news", () => {
           const allArticles = response.body.articles;
           expect(allArticles[0].author).toBe("rogersop");
           expect(allArticles[5].author).toBe("icellusedkars");
-          expect(allArticles[10].author).toBe("butter_bridge");
+          expect(allArticles[9].author).toBe("butter_bridge");
         });
     });
     test("responds with array sorted by body asc", () => {
@@ -152,7 +152,7 @@ describe("nc-news", () => {
           const allArticles = response.body.articles;
           expect(allArticles[0].author).toBe("butter_bridge");
           expect(allArticles[5].author).toBe("icellusedkars");
-          expect(allArticles[10].author).toBe("rogersop");
+          expect(allArticles[9].author).toBe("rogersop");
         });
     });
     test("responds with array of topics mitch sorted by author asc", () => {
@@ -166,7 +166,58 @@ describe("nc-news", () => {
           });
           expect(allArticles[0].author).toBe("butter_bridge");
           expect(allArticles[5].author).toBe("icellusedkars");
-          expect(allArticles[10].author).toBe("rogersop");
+          expect(allArticles[9].author).toBe("rogersop");
+        });
+    });
+    test("should return the correct amount of articles for the given limit and page", () => {
+      const limit = 2;
+      const p = 2;
+      return request(app)
+        .get("/api/articles")
+        .query({ limit, p })
+        .expect(200)
+        .then((response) => {
+          expect(response.body.articles.length).toBe(limit);
+          expect(response.body.total_count).toBeGreaterThan(limit);
+        });
+    });
+    test("status 400 error if the limit parameter is invalid", () => {
+      const limit = 51;
+      const p = 2;
+      return request(app)
+        .get("/api/articles")
+        .query({ limit, p })
+        .expect(400)
+        .then((response) => {
+          expect(response.body.msg).toBe("Invalid limit amount");
+        });
+    });
+    test("status 400 error if the page parameter is invalid", () => {
+      const limit = 2;
+      const p = -1;
+      return request(app)
+        .get("/api/articles")
+        .query({ limit, p })
+        .expect(400)
+        .then((response) => {
+          expect(response.body.msg).toBe("Invalid page number");
+        });
+    });
+    test("should filter articles by multiple topics", () => {
+      const topic = "mitch,cats";
+      return request(app)
+        .get("/api/articles")
+        .query({ topic })
+        .expect(200)
+        .then((response) => {
+          expect(response.body.articles.length).toBeGreaterThan(0);
+          for (let i = 0; i < response.body.articles.length; i++) {
+            expect(response.body.articles[i].topic).toBeOneOf([
+              "mitch",
+              "cats",
+            ]);
+            expect(response.body.articles[i].topic === "paper").toBe(false);
+          }
         });
     });
   });
