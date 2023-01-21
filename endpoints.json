@@ -131,6 +131,29 @@
       }
     }
   },
+  "POST /api/articles": {
+    "description": "Posts a new article to the database. The 'author' must already exist in the database (username). The 'topic' must already exist in the database. The 'article_img_url' can be left empty and the default one will be used. If a custom 'article_img_url' is used it must be a valid, hosted image with a GET status 200. The 'body' and 'topic' must not be empty.",
+    "validTopic" : "slug of topic must exist in the database",
+    "validAuthor" : "username of author must exist in the database",
+    "exampleBody": {
+      "author": "butter_bridge",
+      "title": "I love cats but im allergic to them",
+      "body": "Has anyone cured their allergy to cats?",
+      "topic": "cats"
+    },
+    "exampleResponse": {
+      "article": {
+        "article_id": 13,
+        "title": "I love cats but im allergic to them",
+        "topic": "cats",
+        "author": "butter_bridge",
+        "body": "Has anyone cured their allergy to cats?",
+        "created_at": "2023-01-21T18:09:04.052Z",
+        "votes": 0,
+        "article_img_url": "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700"
+      }
+    }
+  },
   "PATCH /api/article/:article_id": {
     "description": "Updates the vote value of an existing article. The 'article_id' must be passed as an integer. The updated article is returned.",
     "queries" : "article_id",
