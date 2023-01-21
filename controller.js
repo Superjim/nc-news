@@ -13,6 +13,7 @@ const { updateVotesByArticleId } = require("./models/updateVotesByArticleId");
 const { addNewComment } = require("./models/addNewComment");
 const { fetchUserByUsername } = require("./models/fetchUserByUsername");
 const { updateVotesByCommentId } = require("./models/updateVotesByCommentId");
+const { addNewArticle } = require("./models/addNewArticle");
 
 const getEndpoints = (request, response, next) => {
   fetchEndpoints()
@@ -90,6 +91,13 @@ const patchVotesByCommentId = (request, response, next) => {
     .catch((error) => next(error));
 };
 
+const postNewArticle = (request, response, next) => {
+  const { author, title, body, topic, article_img_url } = request.body;
+  addNewArticle(author, title, body, topic, article_img_url)
+    .then((article) => response.status(201).send({ article }))
+    .catch((error) => next(error));
+};
+
 module.exports = {
   getAllTopics,
   getAllArticles,
@@ -102,4 +110,5 @@ module.exports = {
   getEndpoints,
   getUserByUsername,
   patchVotesByCommentId,
+  postNewArticle,
 };
