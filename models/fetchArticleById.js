@@ -5,6 +5,8 @@ const { checkArticleExists } = require("./checkArticleExists");
 const fetchArticleById = async (article_id) => {
   //check article_id is a number, check article exists,
   await checkArticleExists(article_id);
+
+  //fetch article
   const { rows } = await database.query(
     `
       SELECT author, title, article_id, body, topic, created_at, votes, article_img_url, 

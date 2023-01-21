@@ -680,4 +680,172 @@ describe("nc-news", () => {
         });
     });
   });
+  describe("POST /api/articles", () => {
+    test("status 201: returned data is the posted article with correct default properties", () => {
+      const newArticle = {
+        author: "butter_bridge",
+        title: "I love cats but im allergic to them",
+        body: "Has anyone cured their allergy to cats?",
+        topic: "cats",
+      };
+      return request(app)
+        .post("/api/articles")
+        .send(newArticle)
+        .expect(201)
+        .then((response) => {
+          const returnedArticle = response.body.article;
+          expect(returnedArticle).toHaveProperty("author", "butter_bridge");
+          expect(returnedArticle).toHaveProperty(
+            "title",
+            "I love cats but im allergic to them"
+          );
+          expect(returnedArticle).toHaveProperty(
+            "body",
+            "Has anyone cured their allergy to cats?"
+          );
+          expect(returnedArticle).toHaveProperty("topic", "cats");
+          expect(returnedArticle).toHaveProperty("article_id", 13);
+          expect(returnedArticle).toHaveProperty("votes", 0);
+          expect(returnedArticle).toHaveProperty("created_at");
+        });
+    });
+    test("status 201: returned data is the posted article with custom article_img_url", () => {
+      const newArticle = {
+        author: "butter_bridge",
+        title: "Im not allergic to cats!",
+        body: "Turns out it was my housemats dog",
+        topic: "cats",
+        article_img_url:
+          "https://www.gannett-cdn.com/-mm-/7078987d13a1c799be59f1f8d5078afb2c623fe2/c=0-664-2848-2270/local/-/media/USATODAY/GenericImages/2014/09/17/1410998852001-178107822.jpg?width=660&height=373&fit=crop&format=pjpg&auto=webp",
+      };
+      return request(app)
+        .post("/api/articles")
+        .send(newArticle)
+        .expect(201)
+        .then((response) => {
+          const returnedArticle = response.body.article;
+          expect(returnedArticle).toHaveProperty("author", "butter_bridge");
+          expect(returnedArticle).toHaveProperty(
+            "title",
+            "Im not allergic to cats!"
+          );
+          expect(returnedArticle).toHaveProperty(
+            "body",
+            "Turns out it was my housemats dog"
+          );
+          expect(returnedArticle).toHaveProperty("topic", "cats");
+          expect(returnedArticle).toHaveProperty("article_id", 13);
+          expect(returnedArticle).toHaveProperty("votes", 0);
+          expect(returnedArticle).toHaveProperty("created_at");
+          expect(returnedArticle).toHaveProperty(
+            "article_img_url",
+            "https://www.gannett-cdn.com/-mm-/7078987d13a1c799be59f1f8d5078afb2c623fe2/c=0-664-2848-2270/local/-/media/USATODAY/GenericImages/2014/09/17/1410998852001-178107822.jpg?width=660&height=373&fit=crop&format=pjpg&auto=webp"
+          );
+        });
+    });
+    test("error 400 when body missing author", () => {
+      const newArticle = {
+        title: "I love cats but im allergic to them",
+        body: "Has anyone cured their allergy to cats?",
+        topic: "cats",
+      };
+      return request(app)
+        .post("/api/articles")
+        .send(newArticle)
+        .expect(400)
+        .then((response) => {
+          expect(response.body.msg).toBe("Invalid request: author is missing");
+        });
+    });
+    test("error 400 when body missing title", () => {
+      const newArticle = {
+        author: "butter_bridge",
+        body: "Has anyone cured their allergy to cats?",
+        topic: "cats",
+      };
+      return request(app)
+        .post("/api/articles")
+        .send(newArticle)
+        .expect(400)
+        .then((response) => {
+          expect(response.body.msg).toBe("Invalid request: title is missing");
+        });
+    });
+    test("error 400 when body missing body", () => {
+      const newArticle = {
+        author: "butter_bridge",
+        title: "I love cats but im allergic to them",
+        topic: "cats",
+      };
+      return request(app)
+        .post("/api/articles")
+        .send(newArticle)
+        .expect(400)
+        .then((response) => {
+          expect(response.body.msg).toBe("Invalid request: body is missing");
+        });
+    });
+    test("error 400 when body missing topic", () => {
+      const newArticle = {
+        author: "butter_bridge",
+        title: "I love cats but im allergic to them",
+        body: "Has anyone cured their allergy to cats?",
+      };
+      return request(app)
+        .post("/api/articles")
+        .send(newArticle)
+        .expect(400)
+        .then((response) => {
+          expect(response.body.msg).toBe("Invalid request: topic is missing");
+        });
+    });
+    test("error 400 when article_img_url is invalid", () => {
+      const newArticle = {
+        author: "butter_bridge",
+        title: "Im not allergic to cats!",
+        body: "Turns out it was my housemats dog",
+        topic: "cats",
+        article_img_url: "blablabla",
+      };
+      return request(app)
+        .post("/api/articles")
+        .send(newArticle)
+        .expect(400)
+        .then((response) => {
+          expect(response.body.msg).toBe(
+            "Invalid request: blablabla is not an image"
+          );
+        });
+    });
+    test("status 404: author does not exist", () => {
+      const newArticle = {
+        author: "jim",
+        title: "I love cats but im allergic to them",
+        body: "Has anyone cured their allergy to cats?",
+        topic: "cats",
+      };
+      return request(app)
+        .post("/api/articles")
+        .send(newArticle)
+        .expect(404)
+        .then((response) => {
+          expect(response.body.msg).toBe("Username jim not found in database");
+        });
+    });
+    test("status 404: topic does not exist", () => {
+      const newArticle = {
+        author: "butter_bridge",
+        title: "I love dogs but im allergic to them",
+        body: "Has anyone cured their allergy to dogs?",
+        topic: "dogs",
+      };
+      return request(app)
+        .post("/api/articles")
+        .send(newArticle)
+        .expect(404)
+        .then((response) => {
+          expect(response.body.msg).toBe("Topic dogs does not exist");
+        });
+    });
+  });
 });
