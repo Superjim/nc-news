@@ -98,7 +98,7 @@ The application is also deployed online using Render at the address https://nc-n
 | GET /api/topics                         | Retrieves an array of all the available topics in the database, each in the form of an object with keys 'slug' and 'description'.                                                                                                                                                                                                                                                          |
 | GET /api/users                          | Retrieves an array of all registered users in the database, each in the form of an object with keys 'username', 'name' and 'avatar_url'.                                                                                                                                                                                                                                                   |
 | GET /api/users/:username                | "Retrieves a single user by its 'username'. Returns an object with the properties 'username', 'name' and 'avatar_url'.                                                                                                                                                                                                                                                                     |
-| GET /api/articles                       | Retrieves a collection of all available articles from the API. <br />It is possible to filter articles by multiple topics by separating them with a comma in the query string. Please see section 6.1 for a table on the query parameters, as there are quite a few.                                                                                                                       |
+| GET /api/articles                       | Retrieves a collection of all available articles from the API. <br />It is possible to filter articles by multiple topics by separating them with a comma in the query string. <br />It also returns a total_count property which is a count of all articles related to the search. <br />Please see section 6.1 for a table on the query parameters, as there are quite a few.                                                                                                                       |
 | GET /api/articles/:article_id           | Retrieves a single article by its 'article_id'. The 'article_id' must be passed as an integer.                                                                                                                                                                                                                                                                                             |
 | GET /api/articles/:article_id/comments  | Retrieves an array of all comments assigned to the specified 'article_id'. The 'article_id' parameter must be passed as an integer.                                                                                                                                                                                                                                                        |
 | POST /api/articles/:article_id/comments | Posts a new comment to the database. The 'article_id' must be passed as an integer, and the 'username' must match an existing user in the database. The new comment is returned.                                                                                                                                                                                                           |
@@ -182,7 +182,7 @@ status: 200 OK
 			"title": "HOW COOKING HAS CHANGED US",
 			"article_id": 26,
 			"topic": "cooking",
-			"created_at": "2020-04-06T01:00:00.000Z",
+			"created_at": "2020-04-06T00:00:00.000Z",
 			"votes": 0,
 			"article_img_url": "https://images.pexels.com/photos/2284166/pexels-photo-2284166.jpeg?w=700&h=700",
 			"comment_count": 11
@@ -232,7 +232,7 @@ status: 200 OK
 			"title": "What to Cook This Week",
 			"article_id": 31,
 			"topic": "cooking",
-			"created_at": "2020-06-09T03:19:00.000Z",
+			"created_at": "2020-06-09T02:19:00.000Z",
 			"votes": 0,
 			"article_img_url": "https://images.pexels.com/photos/349609/pexels-photo-349609.jpeg?w=700&h=700",
 			"comment_count": 12
@@ -242,7 +242,7 @@ status: 200 OK
 			"title": "Halal food: Keeping pure and true",
 			"article_id": 32,
 			"topic": "cooking",
-			"created_at": "2020-06-18T21:08:00.000Z",
+			"created_at": "2020-06-18T20:08:00.000Z",
 			"votes": 0,
 			"article_img_url": "https://images.pexels.com/photos/954677/pexels-photo-954677.jpeg?w=700&h=700",
 			"comment_count": 5
@@ -252,7 +252,7 @@ status: 200 OK
 			"title": "Seafood substitutions are increasing",
 			"article_id": 33,
 			"topic": "cooking",
-			"created_at": "2020-09-16T17:26:00.000Z",
+			"created_at": "2020-09-16T16:26:00.000Z",
 			"votes": 0,
 			"article_img_url": "https://images.pexels.com/photos/1267320/pexels-photo-1267320.jpeg?w=700&h=700",
 			"comment_count": 6
@@ -266,28 +266,9 @@ status: 200 OK
 			"votes": 0,
 			"article_img_url": "https://images.pexels.com/photos/2403392/pexels-photo-2403392.jpeg?w=700&h=700",
 			"comment_count": 11
-		},
-		{
-			"author": "cooljmessy",
-			"title": "Stone Soup",
-			"article_id": 35,
-			"topic": "cooking",
-			"created_at": "2020-05-26T07:25:00.000Z",
-			"votes": 0,
-			"article_img_url": "https://images.pexels.com/photos/33242/cooking-ingredient-cuisine-kitchen.jpg?w=700&h=700",
-			"comment_count": 14
-		},
-		{
-			"author": "tickle122",
-			"title": "The vegan carnivore?",
-			"article_id": 36,
-			"topic": "cooking",
-			"created_at": "2020-03-09T21:21:00.000Z",
-			"votes": 0,
-			"article_img_url": "https://images.pexels.com/photos/1414651/pexels-photo-1414651.jpeg?w=700&h=700",
-			"comment_count": 6
 		}
-	]
+	],
+	"total_count": 12
 }
 
 ```
