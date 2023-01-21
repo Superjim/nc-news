@@ -40,11 +40,13 @@
     }
   },
   "GET /api/articles": {
-    "description": "Retrieves an array of all articles in the API. Default queries include 'sort_by' (created_at), 'order' (desc) and 'topic' (all). Additional query parameters include 'sort_by' (article_id, title, topic, author, body, created_at, votes), 'order' (asc, desc), and 'topic' (slug of topic).",
+    "description": "Retrieves an array of all available articles from the API. The default query parameters include 'sort_by' (created_at), 'order' (descending), 'topic' (all topics), 'limit'(10) and 'p'(1). Additional query options include 'sort_by' (such as article_id, title, topic, author, body, created_at, votes), 'order' (ascending or descending), 'limit' (a number between 1 and 50), 'p' (the page number) and 'topic' (the slug of a specific topic). It is also possible to filter articles by multiple topics by separating them with a comma in the query string.",
     "queries": [ "sort_by", "order", "topic"],
     "validSortBy": ["article_id", "title", "topic", "author", "body", "created_at", "votes"],
     "validOrder": ["asc", "desc"],
-    "validTopic": "slug of topic in the database",
+    "validTopic": ["topic1", "topic1,topic2,topic3"],
+    "validLimit": "integer greater than 0 but less than 51",
+    "validPage" : "integer greater than 0",
     "exampleResponse": {
       "articles": [
         {
