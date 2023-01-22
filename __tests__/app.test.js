@@ -349,6 +349,47 @@ describe("nc-news", () => {
           );
         });
     });
+    test("return the default number of comments when no limit is provided", () => {
+      return request(app)
+        .get("/api/articles/1/comments")
+        .expect(200)
+        .then((response) => {
+          const comments = response.body.comments;
+          expect(comments.length).toBe(10);
+        });
+    });
+    test("should return the correct page of comments when both limit and page number are provided", () => {
+      return request(app)
+        .get("/api/articles/1/comments?limit=5&p=2")
+        .expect(200)
+        .then((response) => {
+          const comments = response.body.comments;
+          expect(comments.length).toBe(5);
+          expect(comments[0]).toHaveProperty("comment_id", 8);
+        });
+    });
+    test("status 400 error if the limit parameter is invalid", () => {
+      const limit = 51;
+      const p = 2;
+      return request(app)
+        .get("/api/articles/1/comments")
+        .query({ limit, p })
+        .expect(400)
+        .then((response) => {
+          expect(response.body.msg).toBe("Invalid limit amount");
+        });
+    });
+    test("status 400 error if the page parameter is invalid", () => {
+      const limit = 2;
+      const p = -1;
+      return request(app)
+        .get("/api/articles/1/comments")
+        .query({ limit, p })
+        .expect(400)
+        .then((response) => {
+          expect(response.body.msg).toBe("Invalid page number");
+        });
+    });
   });
   describe("POST /api/articles/:article_id/comments", () => {
     test("responds with status 201 and the posted comment", () => {
