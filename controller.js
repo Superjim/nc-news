@@ -14,6 +14,7 @@ const { addNewComment } = require("./models/addNewComment");
 const { fetchUserByUsername } = require("./models/fetchUserByUsername");
 const { updateVotesByCommentId } = require("./models/updateVotesByCommentId");
 const { addNewArticle } = require("./models/addNewArticle");
+const { addNewTopic } = require("./models/addNewTopic");
 
 const getEndpoints = (request, response, next) => {
   fetchEndpoints()
@@ -99,6 +100,13 @@ const postNewArticle = (request, response, next) => {
     .catch((error) => next(error));
 };
 
+const postNewTopic = (request, response, next) => {
+  const { slug, description } = request.body;
+  addNewTopic(slug, description)
+    .then((topic) => response.status(201).send({ topic }))
+    .catch((error) => next(error));
+};
+
 module.exports = {
   getAllTopics,
   getAllArticles,
@@ -112,4 +120,5 @@ module.exports = {
   getUserByUsername,
   patchVotesByCommentId,
   postNewArticle,
+  postNewTopic,
 };

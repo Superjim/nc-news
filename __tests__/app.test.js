@@ -940,4 +940,67 @@ describe("nc-news", () => {
         });
     });
   });
+  describe("POST /api/topics", () => {
+    test("status 201 and new topic object returned", () => {
+      const newTopic = {
+        slug: "cars",
+        description:
+          "We like sitting in traffic moving slower than walking pace during rush hour.",
+      };
+      return request(app)
+        .post("/api/topics")
+        .send(newTopic)
+        .expect(201)
+        .then((response) => {
+          const returnedTopic = response.body.topic;
+          expect(returnedTopic).toHaveProperty("slug", "cars");
+          expect(returnedTopic).toHaveProperty(
+            "description",
+            "We like sitting in traffic moving slower than walking pace during rush hour."
+          );
+          console.log(returnedTopic);
+        });
+    });
+    test("responds with error 400 and message when topic is missing slug", () => {
+      const article = {
+        description: "This topic is missing slug",
+      };
+      return request(app)
+        .post("/api/topics")
+        .send(article)
+        .expect(400)
+        .then((response) => {
+          expect(response.body.msg).toBe("Invalid request: slug is missing");
+        });
+    });
+    test("responds with error 400 and message when topic is missing description", () => {
+      const article = {
+        slug: "This topic is missing description",
+      };
+      return request(app)
+        .post("/api/topics")
+        .send(article)
+        .expect(400)
+        .then((response) => {
+          expect(response.body.msg).toBe(
+            "Invalid request: description is missing"
+          );
+        });
+    });
+    test("responds with error 400 when posting a topic that already exists", () => {
+      const article = {
+        slug: "mitch",
+        description: "test test test",
+      };
+      return request(app)
+        .post("/api/topics")
+        .send(article)
+        .expect(400)
+        .then((response) => {
+          expect(response.body.msg).toBe(
+            "Invalid request: topic mitch already exists"
+          );
+        });
+    });
+  });
 });

@@ -15,6 +15,7 @@ const {
   getUserByUsername,
   patchVotesByCommentId,
   postNewArticle,
+  postNewTopic,
 } = require("./controller");
 
 app.use(express.json());
@@ -28,6 +29,7 @@ app.get("/api/articles/:article_id", getArticleById);
 app.get("/api/articles/:article_id/comments", getCommentsByArticleId);
 app.post("/api/articles/:article_id/comments", postCommentByArticleId);
 app.post("/api/articles", postNewArticle);
+app.post("/api/topics", postNewTopic);
 app.patch("/api/articles/:article_id", patchVotesByArticleId);
 app.patch("/api/comments/:comment_id", patchVotesByCommentId);
 app.delete("/api/comments/:comment_id", removeCommentByCommentId);

@@ -157,6 +157,19 @@
       }
     }
   },
+  "POST /api/topics": {
+    "description": "Posts a new topic to database. Returns the newly created topic object on successful creation.",
+    "exampleBody": {
+      "slug": "cars",
+      "description": "We like sitting in traffic moving slower than walking pace during rush hour."
+    },
+    "exampleResponse": {
+      "topic": {
+        "slug": "cars",
+        "description": "We like sitting in traffic moving slower than walking pace during rush hour."
+      }
+    }
+  },
   "PATCH /api/article/:article_id": {
     "description": "Updates the vote value of an existing article. The 'article_id' must be passed as an integer. The updated article is returned.",
     "queries" : "article_id",
