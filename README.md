@@ -66,7 +66,7 @@ npm install
 
 The postgresql database will require seeding.
 
-Seeding a database refers to the process of adding initial data to a newly created or an empty database. The data added is called seed data and is similar to the the application will eventually use. There are two scripts that firstly create the tables for the database, and then populate it with data. You can run these commands again to reset the database data.
+Seeding a database refers to the process of adding initial data to a newly created or an empty database. The data added is called seed data and is similar to what the the application will eventually use. There are two scripts that firstly create the tables for the database, and then populate it with data. You can run these commands again to reset the database data.
 
 Type the following in the terminal:
 
