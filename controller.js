@@ -48,7 +48,8 @@ const getArticleById = (request, response, next) => {
 
 const getCommentsByArticleId = (request, response, next) => {
   const { article_id } = request.params;
-  fetchCommentsByArticleId(article_id)
+  const { limit, p } = request.query;
+  fetchCommentsByArticleId(article_id, limit, p)
     .then((comments) => response.status(200).send({ comments }))
     .catch((error) => next(error));
 };

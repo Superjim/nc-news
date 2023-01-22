@@ -93,7 +93,7 @@
   },
   "GET /api/article/:article_id/comments": {
     "description": "Retrieves an array of all comments assigned to the specified 'article_id'. The 'article_id' parameter must be passed as an integer.",
-    "queries" : "article_id",
+    "queries" : ["article_id", "limit (number of comments per page)(optional)", "p (page number to start from)(optional)"],
     "exampleResponse": {
       "comments": [
         {
