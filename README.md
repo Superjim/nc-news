@@ -6,7 +6,7 @@ NC-News is a backend service built as part of a week-long project for my Northco
 
 ## Deployment
 
-This project is currently deployed at https://nc-news-6g30.onrender.com. You can access the deployed API by making requests to this URL.
+This project is currently deployed at https://nc-news-6g30.onrender.com/api. You can access the deployed API by making requests to this URL.
 
 The project is deployed using the latest version of my github projects main folder.
 
