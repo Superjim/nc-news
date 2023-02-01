@@ -958,7 +958,6 @@ describe("nc-news", () => {
             "description",
             "We like sitting in traffic moving slower than walking pace during rush hour."
           );
-          console.log(returnedTopic);
         });
     });
     test("responds with error 400 and message when topic is missing slug", () => {
@@ -999,6 +998,43 @@ describe("nc-news", () => {
         .then((response) => {
           expect(response.body.msg).toBe(
             "Invalid request: topic mitch already exists"
+          );
+        });
+    });
+  });
+  describe("DELETE /api/articles/1", () => {
+    test("returns status 204 and no content", () => {
+      return request(app).delete("/api/articles/1").expect(204);
+    });
+    test("article is deleted", () => {
+      return request(app)
+        .get("/api/articles/1")
+        .expect(200)
+        .then(() => {
+          return request(app).delete("/api/articles/1").expect(204);
+        })
+        .then(() => {
+          return request(app).get("/api/articles/1/").expect(404);
+        })
+        .then((response) => {
+          expect(response.body.msg).toBe("Article 1 does not exist");
+        });
+    });
+    test("returns error 404 article does not exist", () => {
+      return request(app)
+        .delete("/api/articles/250")
+        .expect(404)
+        .then((response) => {
+          expect(response.body.msg).toBe("Article 250 does not exist");
+        });
+    });
+    test("400 - invalid article id - responds with status 400 and message: Invalid request: hello is not a number", () => {
+      return request(app)
+        .delete("/api/articles/hello")
+        .expect(400)
+        .then((response) => {
+          expect(response.body.msg).toBe(
+            "Invalid request: hello is not a number"
           );
         });
     });

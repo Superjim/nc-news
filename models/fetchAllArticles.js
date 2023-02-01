@@ -77,7 +77,10 @@ const fetchAllArticles = async ({
   const total_count = await database.query(
     `SELECT COUNT(*) FROM articles ${topic}`
   );
-  return { articles: articles.rows, total_count: +total_count.rows[0].count };
+  return {
+    articles: articles.rows,
+    total_count: +total_count.rows[0].count,
+  };
 };
 
 module.exports = { fetchAllArticles };

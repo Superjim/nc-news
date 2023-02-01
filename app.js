@@ -16,6 +16,7 @@ const {
   patchVotesByCommentId,
   postNewArticle,
   postNewTopic,
+  removeArticleByArticleId,
 } = require("./controller");
 
 app.use(express.json());
@@ -33,6 +34,7 @@ app.post("/api/topics", postNewTopic);
 app.patch("/api/articles/:article_id", patchVotesByArticleId);
 app.patch("/api/comments/:comment_id", patchVotesByCommentId);
 app.delete("/api/comments/:comment_id", removeCommentByCommentId);
+app.delete("/api/articles/:article_id", removeArticleByArticleId);
 
 // Error handling
 
