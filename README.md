@@ -10,7 +10,7 @@ This project is currently deployed at https://nc-news-6g30.onrender.com/api. You
 
 The project is deployed using the latest version of my github projects main folder.
 
-If you would like to deploy the project yourself locally, you can do so by following the instructions in the "To setup and run this project locally" section of this README, or [**skip ahead to the routes**](## 6.-Routes)
+If you would like to deploy the project yourself locally, you can do so by following the instructions in the "To setup and run this project locally" section of this README, or [**skip ahead to the routes**](#6.-Routes)
 
 ### To setup and run this project locally:
 
@@ -115,6 +115,7 @@ The application is also deployed online using Render at the address https://nc-n
 | DELETE /api/articles/:article_id        | Deletes a single article by its `article_id`. Any corresponding comments will also be deleted. The `article_id` parameter must be passed as an integer.                                                                                                                                                                                                                           |
 
 <br />
+
 ### 6.1 GET /api/articles query parameters
 
 | Query   | Options                                                   | Default    |
@@ -126,6 +127,7 @@ The application is also deployed online using Render at the address https://nc-n
 | p       | Any integer 1 and above                                   | 1          |
 
 <br />
+
 ## 7. Example Usage
 
 ### Retrieve all topics:
