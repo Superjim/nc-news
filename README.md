@@ -10,7 +10,7 @@ This project is currently deployed at https://nc-news-6g30.onrender.com/api. You
 
 The project is deployed using the latest version of my github projects main folder.
 
-If you would like to deploy the project yourself locally, you can do so by following the instructions in the "To setup and run this project locally" section of this README, or [**skip ahead to the routes**](6. Routes)
+If you would like to deploy the project yourself locally, you can do so by following the instructions in the "To setup and run this project locally" section of this README, or [**skip ahead to the routes**](##6.-Routes)
 
 ### To setup and run this project locally:
 
