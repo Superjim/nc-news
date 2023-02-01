@@ -42,9 +42,11 @@ PGDATABASE=nc_news
 
 ## 3. Install dependencies
 
-The minimum version of **Node.js** required to run this project is 6.0.0, as it is written in ES6, however I recommend using the latest long term support version. You can get this from https://nodejs.org.
+This project requires a minimum version of Node.js 6.0.0, which supports the ES6 syntax used in the code. It is recommended to use the latest long-term support (LTS) version of Node.js, which can be obtained from the official website at https://nodejs.org.
 
-Once you have Node.js installed, type this in the terminal to install the following required dependencies for the project:
+Similarly, a minimum version of PostgreSQL 9.1 is necessary due to the usage of the `ON DELETE CASCADE` feature. Again, it is recommended to use the latest LTS version of PostgreSQL, which can be downloaded from the official website at https://www.postgresql.org/.
+
+Once you have Node.js and PostgreSQL installed, type this in the terminal to install the following required dependencies for the project:
 
 ```bash
 npm install
@@ -54,17 +56,18 @@ npm install
 | ------------- | ------------------- | --------------------------------------------------------------------------- |
 | Node.js       | 18.13.0             | JavaScript runtime for the backend.                                         |
 | Express       | 4.18.2              | A web framework for Node.js.                                                |
-| PostgreSQL    | 8.7.3               | A powerful, open-source object-relational database system.                  |
+| PostgreSQL    | 14.6                | A powerful, open-source object-relational database system.                  |
 | dotenv        | 16.0.0              | A zero-dependency module that loads environment variables from a .env file. |
 | supertest     | 6.3.3               | A library for testing Node.js HTTP servers.                                 |
 | husky         | 8.0.2               | A library for specifying git hooks in package.json.                         |
 | jest          | 27.5.1              | A JavaScript testing framework.                                             |
 | jest-extended | 2.0.0               | Additional Jest matchers.                                                   |
+| pg            | 8.9.0               | Non-blocking PostgreSQL client for Node.js.                                 |
 | pg-format     | 1.0.4               | A library for formatting PostgreSQL queries.                                |
 
 ## 4. Setup and seed the database
 
-The postgresql database will require seeding.
+The PostgreSQL database will require seeding.
 
 Seeding a database refers to the process of adding initial data to a newly created or an empty database. The data added is called seed data and is similar to what the the application will eventually use. There are two scripts that firstly create the tables for the database, and then populate it with data. You can run these commands again to reset the database data.
 
@@ -92,7 +95,7 @@ Using an application such as [Insomnia](https://insomnia.rest/) or [Postman](htt
 
 If you have setup the project locally, you can use the address http://localhost:9090/ along with the route.
 
-The application is also deployed online using Render at the address https://nc-news-6g30.onrender.com.
+The application is also deployed online using Render at the address https://nc-news-6g30.onrender.com/api.
 
 | Route                                   | Description                                                                                                                                                                                                                                                                                                                                                                       |
 | --------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -109,17 +112,18 @@ The application is also deployed online using Render at the address https://nc-n
 | PATCH /api/articles/:article_id         | Updates the vote value of an existing article. The `article_id` must be passed as an integer. The updated article is returned.                                                                                                                                                                                                                                                    |
 | PATCH /api/comments/:comment_id         | Updates the vote value of an existing comment. The `comment_id` must be passed as an integer. The updated comment is returned.                                                                                                                                                                                                                                                    |
 | DELETE /api/comments/:comment_id        | Deletes a single comment by its `comment_id`. The `comment_id` parameter must be passed as an integer.                                                                                                                                                                                                                                                                            |
+| DELETE /api/articles/:article_id        | Deletes a single article by its `article_id`. Any corresponding comments will also be deleted. The `article_id` parameter must be passed as an integer.                                                                                                                                                                                                                           |
 
 <br />
 ### 6.1 GET /api/articles query parameters
 
-| Query   | Default    | Options                                                   |
-| ------- | ---------- | --------------------------------------------------------- |
-| sort_by | created_at | article_id, title, topic, author, body, created_at, votes |
-| order   | desc       | asc, desc                                                 |
-| topic   | all topics | topic OR topic1,topic2,topic3                             |
-| limit   | 10         | Any integer 1 to 50                                       |
-| p       | 1          | Any integer 1 and above                                   |
+| Query   | Options                                                   | Default    |
+| ------- | --------------------------------------------------------- | ---------- |
+| sort_by | article_id, title, topic, author, body, created_at, votes | created_at |
+| order   | asc, desc                                                 | desc       |
+| topic   | topic OR topic1,topic2,topic3                             | all topics |
+| limit   | Any integer 1 to 50                                       | 10         |
+| p       | Any integer 1 and above                                   | 1          |
 
 <br />
 ## 7. Example Usage

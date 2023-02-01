@@ -209,5 +209,9 @@
   "DELETE /api/comments/:comment_id": {
     "description": "Deletes a single comment by its 'comment_id'. The 'comment_id' parameter must be passed as an integer.",
     "queries" : "comment_id"
+  },
+  "DELETE /api/articles/:article_id": {
+    "description": "Deletes a single article by its 'article_id'. Any corresponding comments will also be deleted. The 'article_id' parameter must be passed as an integer.",
+    "queries" : "article_id"
   }
 }

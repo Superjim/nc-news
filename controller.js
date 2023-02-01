@@ -15,6 +15,9 @@ const { fetchUserByUsername } = require("./models/fetchUserByUsername");
 const { updateVotesByCommentId } = require("./models/updateVotesByCommentId");
 const { addNewArticle } = require("./models/addNewArticle");
 const { addNewTopic } = require("./models/addNewTopic");
+const {
+  deleteArticleByArticleId,
+} = require("./models/deleteArticleByArticleId");
 
 const getEndpoints = (request, response, next) => {
   fetchEndpoints()
@@ -78,6 +81,13 @@ const removeCommentByCommentId = (request, response, next) => {
     .catch((error) => next(error));
 };
 
+const removeArticleByArticleId = (request, response, next) => {
+  const { article_id } = request.params;
+  deleteArticleByArticleId(article_id)
+    .then(() => response.status(204).send())
+    .catch((error) => next(error));
+};
+
 const getUserByUsername = (request, response, next) => {
   const { username } = request.params;
   fetchUserByUsername(username)
@@ -121,4 +131,5 @@ module.exports = {
   patchVotesByCommentId,
   postNewArticle,
   postNewTopic,
+  removeArticleByArticleId,
 };
