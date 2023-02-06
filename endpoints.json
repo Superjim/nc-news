@@ -135,7 +135,7 @@
     }
   },
   "POST /api/articles": {
-    "description": "Posts a new article to the database. The 'author' must already exist in the database (username). The 'topic' must already exist in the database. The 'article_img_url' can be left empty and the default one will be used. If a custom 'article_img_url' is used it must be a valid, hosted image with a GET status 200. The 'body' and 'topic' must not be empty.",
+    "description": "Posts a new article to the database. The 'author' must already exist in the database (username). The 'topic' must already exist in the database. The 'article_img_url' can be left empty and the default one will be used. If a custom 'article_img_url' is used it must be a valid, hosted image with a GET status 200. The 'body' and 'title' must not be empty.",
     "validTopic" : "slug of topic must exist in the database",
     "validAuthor" : "username of author must exist in the database",
     "exampleBody": {
