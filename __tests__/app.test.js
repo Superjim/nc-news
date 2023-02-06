@@ -50,6 +50,7 @@ describe("nc-news", () => {
             expect(article).toHaveProperty("title");
             expect(article).toHaveProperty("article_id");
             expect(article).toHaveProperty("topic");
+            expect(article).toHaveProperty("body");
             expect(article).toHaveProperty("created_at");
             expect(article).toHaveProperty("votes");
             expect(article).toHaveProperty("article_img_url");
