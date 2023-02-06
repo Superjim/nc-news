@@ -61,7 +61,7 @@ const fetchAllArticles = async ({
   //fetch all articles from database
   const articles = await database.query(
     `
-          SELECT articles.author, articles.title, articles.article_id, articles.topic, articles.created_at, articles.votes, articles.article_img_url, 
+          SELECT articles.author, articles.title, articles.article_id, articles,body articles.topic, articles.created_at, articles.votes, articles.article_img_url, 
           COUNT(comments.article_id)::integer AS comment_count 
           FROM articles 
           LEFT JOIN comments 
