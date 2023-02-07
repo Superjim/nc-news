@@ -106,6 +106,18 @@ describe("nc-news", () => {
           }
         });
     });
+    test("responds with an array of articles sorted by comment_count", () => {
+      return request(app)
+        .get("/api/articles?sort_by=comment_count")
+        .expect(200)
+        .then((response) => {
+          const allArticles = response.body.articles;
+          expect(Array.isArray(allArticles)).toBe(true);
+          expect(allArticles.length > 0).toBe(true);
+          //Date parse the created_at property and check its greater than the next one along the array. Run to array.length - 1 so it doesnt compare undefined.
+          console.log(allArticles);
+        });
+    });
     test("responds with error 404 and message when topic isnt in database", () => {
       return request(app)
         .get("/api/articles?topic=jim")

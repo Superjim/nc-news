@@ -17,6 +17,7 @@ const fetchAllArticles = async ({
     "author",
     "body",
     "created_at",
+    "comment_count",
     "votes",
   ];
 
