@@ -75,7 +75,7 @@
       "total_count:": 2
     }
   },
-  "GET /api/article/:article_id": {
+  "GET /api/articles/:article_id": {
     "description": "Retrieves a single article by its 'article_id'. The 'article_id' must be passed as an integer.",
     "queries" : "article_id",
     "exampleResponse": {
@@ -92,7 +92,7 @@
       }
     }
   },
-  "GET /api/article/:article_id/comments": {
+  "GET /api/articles/:article_id/comments": {
     "description": "Retrieves an array of all comments assigned to the specified 'article_id'. The 'article_id' parameter must be passed as an integer.",
     "queries" : ["article_id", "limit (number of comments per page)(optional)", "p (page number to start from)(optional)"],
     "exampleResponse": {
@@ -116,7 +116,7 @@
       ]
     }
   },
-  "POST /api/article/:article_id/comments": {
+  "POST /api/articles/:article_id/comments": {
     "description": "Posts a new comment to the database. The 'article_id' must be passed as an integer, and the 'username' must match an existing user in the database. The new comment is returned.",
     "queries" : "article_id",
     "validUsers" : "username must exist in the database",
@@ -171,7 +171,7 @@
       }
     }
   },
-  "PATCH /api/article/:article_id": {
+  "PATCH /api/articles/:article_id": {
     "description": "Updates the vote value of an existing article. The 'article_id' must be passed as an integer. The updated article is returned.",
     "queries" : "article_id",
     "exampleBody": {
