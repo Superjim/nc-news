@@ -69,7 +69,7 @@ const fetchAllArticles = async ({
           ON articles.article_id = comments.article_id 
           ${topic} 
           GROUP BY articles.article_id, comments.article_id, articles.author 
-          ORDER BY articles.${sort_by} ${order}
+          ORDER BY ${sort_by} ${order}
           LIMIT ${limit} OFFSET ${offset}
           `
   );

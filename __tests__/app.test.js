@@ -114,8 +114,8 @@ describe("nc-news", () => {
           const allArticles = response.body.articles;
           expect(Array.isArray(allArticles)).toBe(true);
           expect(allArticles.length > 0).toBe(true);
-          //Date parse the created_at property and check its greater than the next one along the array. Run to array.length - 1 so it doesnt compare undefined.
-          console.log(allArticles);
+          expect(allArticles[0].comment_count).toBe(11);
+          expect(allArticles[1].comment_count).toBe(2);
         });
     });
     test("responds with error 404 and message when topic isnt in database", () => {
